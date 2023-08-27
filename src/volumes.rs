@@ -110,4 +110,34 @@ mod tests {
             Some("named_vol".to_string())
         );
     }
+
+    #[test]
+    fn test_empty_volumes() {
+        let yaml = r#"
+            volumes:
+              "vol1":
+        "#;
+
+        let volumes: Volumes = serde_yaml::from_str(yaml).unwrap();
+        assert_eq!(volumes.volumes.len(), 1);
+
+        let yaml = r#"
+            volumes:
+        "#;
+
+        let volumes: Volumes = serde_yaml::from_str(yaml).unwrap();
+        assert!(volumes.volumes.is_empty());
+    }
+
+    #[test]
+    fn test_invalid_volume() {
+        let yaml = r#"
+            volumes:
+                hello:
+                    world
+        "#;
+
+        let volumes: Result<Volumes, _> = serde_yaml::from_str(yaml);
+        assert!(volumes.is_err());
+    }
 }
