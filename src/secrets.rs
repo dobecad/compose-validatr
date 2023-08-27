@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 pub struct Secrets {
-    secrets: HashMap<String, SecretAttributes>
+    secrets: HashMap<String, SecretAttributes>,
 }
 
 pub struct SecretAttributes {

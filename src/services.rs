@@ -10,21 +10,21 @@ pub struct Services {
     cpu_period: String,
     cpu_quota: String,
     cpu_rt_runtime: u32,
-    cpus: f32,  // deprecated
+    cpus: f32, // deprecated
     cpuset: u8,
-    cap_add: Vec<String>,  // define capabilities enum
+    cap_add: Vec<String>, // define capabilities enum
     cap_drop: Vec<String>,
     cgroup: String, // define cgroup enum (host, private)
     cgroup_parent: String,
-    command: String, // could also be Vec<String>
+    command: String,      // could also be Vec<String>
     configs: Vec<String>, // needs to exist in config top level
     container_name: String,
     credential_spec: String, // file, registry, config
-    depends_on: String, // existing service
+    depends_on: String,      // existing service
     deploy: String,
     device_cgroup_rules: Vec<String>,
     devices: Vec<String>,
-    dns: Vec<String>,   // could also just be a string
+    dns: Vec<String>, // could also just be a string
     dns_opt: Vec<String>,
     dns_search: Vec<String>, // could also be a string
     domainname: String,
@@ -50,7 +50,7 @@ pub struct Services {
     network_mode: String,
     networks: Vec<String>,
     mac_address: String,
-    mem_limit: String,  // deprecated
+    mem_limit: String,       // deprecated
     mem_reservation: String, // deprecated
     mem_swappiness: u8,
     memswap_limit: String,
@@ -66,7 +66,7 @@ pub struct Services {
     read_only: bool,
     restart: String, // enum
     runtime: String,
-    scale: u32, // deprecated
+    scale: u32,      // deprecated
     secrets: String, // valid secrets
     secruity_opt: Vec<String>,
     shm_size: u32,

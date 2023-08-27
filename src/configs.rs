@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 pub struct Configs {
-    configs: HashMap<String, ConfigAttributes>
+    configs: HashMap<String, ConfigAttributes>,
 }
 
 pub struct ConfigAttributes {
