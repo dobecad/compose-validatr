@@ -1,35 +1,11 @@
-/// Top level elements:
-/// services
-/// network
-/// volumes
-/// configs
-/// secrets
-
+use super::{configs, network, secrets, services, volumes};
 use serde::Deserialize;
-use super::services;
 
 pub struct Compose {
     version: String,
     services: services::Services,
-    network: Network,
-    volumes: Volumes,
-    configs: Configs,
-    secrets: Secrets,
+    network: network::Network,
+    volumes: volumes::Volumes,
+    configs: configs::Configs,
+    secrets: secrets::Secrets,
 }
-
-pub struct Network {
-
-}
-
-pub struct Volumes {
-
-}
-
-pub struct Configs {
-
-}
-
-pub struct Secrets {
-
-}
-
