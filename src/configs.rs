@@ -3,14 +3,14 @@ use std::collections::HashMap;
 
 #[derive(Debug, Deserialize)]
 pub struct Configs {
-    configs: HashMap<String, Option<ConfigAttributes>>,
+    pub configs: HashMap<String, Option<ConfigAttributes>>,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct ConfigAttributes {
-    file: Option<String>,
-    external: Option<bool>,
-    name: Option<String>,
+    pub file: Option<String>,
+    pub external: Option<bool>,
+    pub name: Option<String>,
 }
 
 #[cfg(test)]

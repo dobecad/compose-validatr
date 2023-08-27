@@ -8,25 +8,25 @@ pub struct Network {
 
 #[derive(Debug, Deserialize)]
 pub struct NetworkAttributes {
-    ipam: String,   // struct
-    driver: String, // enum
-    config: Vec<Config>,
-    internal: bool,
-    labels: Vec<String>, // or hashmap string,string
-    name: String,
+    pub ipam: String,   // struct
+    pub driver: String, // enum
+    pub config: Vec<Config>,
+    pub internal: bool,
+    pub labels: Vec<String>, // or hashmap string,string
+    pub name: String,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct Config {
-    subnet: String,
-    ip_range: String,
-    gateway: String,
-    aux_addresses: AuxAddresses,
+    pub subnet: String,
+    pub ip_range: String,
+    pub gateway: String,
+    pub aux_addresses: AuxAddresses,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct AuxAddresses {
-    addresses: HashMap<String, String>,
+    pub addresses: HashMap<String, String>,
 }
 
 #[cfg(test)]

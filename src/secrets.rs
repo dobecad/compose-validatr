@@ -3,15 +3,15 @@ use std::collections::HashMap;
 
 #[derive(Debug, Deserialize)]
 pub struct Secrets {
-    secrets: HashMap<String, Option<SecretAttributes>>,
+    pub secrets: HashMap<String, Option<SecretAttributes>>,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct SecretAttributes {
-    file: Option<String>,
-    environment: Option<String>,
-    external: Option<bool>,
-    name: Option<String>,
+    pub file: Option<String>,
+    pub environment: Option<String>,
+    pub external: Option<bool>,
+    pub name: Option<String>,
 }
 
 #[cfg(test)]

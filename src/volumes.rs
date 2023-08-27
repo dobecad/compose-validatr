@@ -3,24 +3,24 @@ use std::collections::HashMap;
 
 #[derive(Debug, Deserialize)]
 pub struct Volumes {
-    volumes: HashMap<String, Option<VolumeAttributes>>,
+    pub volumes: HashMap<String, Option<VolumeAttributes>>,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct VolumeAttributes {
-    driver: Option<String>,
-    driver_opts: Option<DriverOpts>,
-    external: Option<String>,
-    labels: Option<Vec<String>>, // could be hashmap string,string
-    name: Option<String>,
+    pub driver: Option<String>,
+    pub driver_opts: Option<DriverOpts>,
+    pub external: Option<String>,
+    pub labels: Option<Vec<String>>, // could be hashmap string,string
+    pub name: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct DriverOpts {
     #[serde(rename = "type")]
-    driver_type: Option<String>,
-    o: Option<String>,
-    device: Option<String>,
+    pub driver_type: Option<String>,
+    pub o: Option<String>,
+    pub device: Option<String>,
 }
 
 #[cfg(test)]
