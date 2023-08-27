@@ -37,11 +37,26 @@ mod tests {
         let secrets: Secrets = serde_yaml::from_str(yaml).unwrap();
 
         assert_eq!(secrets.secrets.len(), 4);
-        assert_eq!(secrets.secrets["secret1"].as_ref().unwrap().file, Some("path/to/secret1".to_string()));
-        assert_eq!(secrets.secrets["secret2"].as_ref().unwrap().file, Some("path/to/secret2".to_string()));
-        assert_eq!(secrets.secrets["secret2"].as_ref().unwrap().environment, Some("ENV_VAR".to_string()));
-        assert_eq!(secrets.secrets["secret3"].as_ref().unwrap().external, Some(true));
-        assert_eq!(secrets.secrets["secret4"].as_ref().unwrap().name, Some("named_secret".to_string()));
+        assert_eq!(
+            secrets.secrets["secret1"].as_ref().unwrap().file,
+            Some("path/to/secret1".to_string())
+        );
+        assert_eq!(
+            secrets.secrets["secret2"].as_ref().unwrap().file,
+            Some("path/to/secret2".to_string())
+        );
+        assert_eq!(
+            secrets.secrets["secret2"].as_ref().unwrap().environment,
+            Some("ENV_VAR".to_string())
+        );
+        assert_eq!(
+            secrets.secrets["secret3"].as_ref().unwrap().external,
+            Some(true)
+        );
+        assert_eq!(
+            secrets.secrets["secret4"].as_ref().unwrap().name,
+            Some("named_secret".to_string())
+        );
     }
 
     #[test]

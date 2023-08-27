@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use serde::Deserialize;
+use std::collections::HashMap;
 
 #[derive(Debug, Deserialize)]
 pub struct Configs {
@@ -35,10 +35,22 @@ mod tests {
         let configs: Configs = serde_yaml::from_str(yaml).unwrap();
 
         assert_eq!(configs.configs.len(), 4);
-        assert_eq!(configs.configs["config1"].as_ref().unwrap().file, Some("path/to/config1".to_string()));
-        assert_eq!(configs.configs["config2"].as_ref().unwrap().file, Some("path/to/config2".to_string()));
-        assert_eq!(configs.configs["config3"].as_ref().unwrap().external, Some(true));
-        assert_eq!(configs.configs["config4"].as_ref().unwrap().name, Some("named_config".to_string()));
+        assert_eq!(
+            configs.configs["config1"].as_ref().unwrap().file,
+            Some("path/to/config1".to_string())
+        );
+        assert_eq!(
+            configs.configs["config2"].as_ref().unwrap().file,
+            Some("path/to/config2".to_string())
+        );
+        assert_eq!(
+            configs.configs["config3"].as_ref().unwrap().external,
+            Some(true)
+        );
+        assert_eq!(
+            configs.configs["config4"].as_ref().unwrap().name,
+            Some("named_config".to_string())
+        );
     }
 
     #[test]

@@ -1,9 +1,12 @@
+use serde::Deserialize;
 use std::collections::HashMap;
 
+#[derive(Debug, Deserialize)]
 pub struct Network {
-    network: HashMap<String, NetworkAttributes>, // String, network attributes
+    network: HashMap<String, Option<NetworkAttributes>>, // String, network attributes
 }
 
+#[derive(Debug, Deserialize)]
 pub struct NetworkAttributes {
     ipam: String,   // struct
     driver: String, // enum
@@ -13,6 +16,7 @@ pub struct NetworkAttributes {
     name: String,
 }
 
+#[derive(Debug, Deserialize)]
 pub struct Config {
     subnet: String,
     ip_range: String,
@@ -20,6 +24,7 @@ pub struct Config {
     aux_addresses: AuxAddresses,
 }
 
+#[derive(Debug, Deserialize)]
 pub struct AuxAddresses {
     addresses: HashMap<String, String>,
 }

@@ -1,5 +1,6 @@
 use serde::Deserialize;
 
+#[derive(Debug, Deserialize)]
 pub struct Services {
     attach: bool,
     build: String,
