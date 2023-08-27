@@ -9,3 +9,8 @@ pub struct Compose {
     configs: configs::Configs,
     secrets: secrets::Secrets,
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+}

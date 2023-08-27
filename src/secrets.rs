@@ -10,3 +10,8 @@ pub struct SecretAttributes {
     external: bool,
     name: String,
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+}

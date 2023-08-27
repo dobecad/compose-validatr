@@ -84,3 +84,8 @@ pub struct Services {
     volumes_from: Vec<String>,
     working_dir: String,
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+}

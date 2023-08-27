@@ -23,3 +23,8 @@ pub struct Config {
 pub struct AuxAddresses {
     addresses: HashMap<String, String>,
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+}

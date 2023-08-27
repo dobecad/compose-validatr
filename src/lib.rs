@@ -1,6 +1,6 @@
-mod compose;
-mod configs;
-mod network;
-mod secrets;
-mod services;
-mod volumes;
+pub mod compose;
+pub mod configs;
+pub mod network;
+pub mod secrets;
+pub mod services;
+pub mod volumes;

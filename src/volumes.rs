@@ -17,3 +17,8 @@ pub struct DriverOpts {
     o: String,
     device: String,
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+}
