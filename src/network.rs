@@ -84,4 +84,22 @@ mod tests {
         );
         assert_eq!(networks.networks["mynet1"].as_ref().unwrap().config.as_ref().unwrap().len(), 1);
     }
+
+    #[test]
+    fn test_empty_network() {
+        let yaml = r#"
+        networks:
+        "#;
+
+        let networks: Networks = serde_yaml::from_str(yaml).unwrap();
+        assert_eq!(networks.networks.len(), 0);
+
+        let yaml = r#"
+        networks:
+            hello:
+        "#;
+
+        let networks: Networks = serde_yaml::from_str(yaml).unwrap();
+        assert_eq!(networks.networks.len(), 1);
+    }
 }
