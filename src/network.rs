@@ -79,10 +79,24 @@ mod tests {
         let networks: Networks = serde_yaml::from_str(yaml).unwrap();
         assert_eq!(networks.networks.len(), 1);
         assert_eq!(
-            networks.networks["mynet1"].as_ref().unwrap().driver.as_ref().unwrap(),
+            networks.networks["mynet1"]
+                .as_ref()
+                .unwrap()
+                .driver
+                .as_ref()
+                .unwrap(),
             &Driver::Default
         );
-        assert_eq!(networks.networks["mynet1"].as_ref().unwrap().config.as_ref().unwrap().len(), 1);
+        assert_eq!(
+            networks.networks["mynet1"]
+                .as_ref()
+                .unwrap()
+                .config
+                .as_ref()
+                .unwrap()
+                .len(),
+            1
+        );
     }
 
     #[test]
