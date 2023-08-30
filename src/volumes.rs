@@ -11,7 +11,7 @@ pub struct VolumeAttributes {
     pub driver: Option<String>,
     pub driver_opts: Option<DriverOpts>,
     pub external: Option<String>,
-    pub labels: Option<Vec<String>>, // could be hashmap string,string
+    pub labels: Option<Labels>,
     pub name: Option<String>,
 }
 
@@ -21,6 +21,13 @@ pub struct DriverOpts {
     pub driver_type: Option<String>,
     pub o: Option<String>,
     pub device: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(untagged)]
+pub enum Labels {
+    List(Vec<String>),
+    Map(HashMap<String, String>),
 }
 
 #[cfg(test)]
@@ -100,8 +107,7 @@ mod tests {
                 .as_ref()
                 .unwrap()
                 .labels
-                .as_ref()
-                .unwrap()
+                .iter()
                 .len(),
             2
         );
