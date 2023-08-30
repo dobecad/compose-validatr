@@ -14,4 +14,9 @@ pub struct Compose {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn simple_compose() {
+        todo!()
+    }
 }

@@ -1,39 +1,46 @@
+mod build;
+mod blkio_config;
+mod deploy;
+
+use std::collections::HashMap;
+
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
 pub struct Services {
-    pub attach: bool,
-    pub build: String,
-    pub blkio_config: String,
-    pub cpu_count: u8,
-    pub cpu_percent: f32,
-    pub cpu_shares: u32,
-    pub cpu_period: String,
-    pub cpu_quota: String,
-    pub cpu_rt_runtime: u32,
-    pub cpus: f32, // deprecated
-    pub cpuset: u8,
-    pub cap_add: Vec<String>, // define capabilities enum
+    pub attach: Option<bool>,
+    pub build: Option<build::Build>,
+    pub blkio_config: Option<blkio_config::BlkioConfig>,
+    pub cpu_count: Option<u8>,
+    pub cpu_percent: Option<f32>,
+    pub cpu_shares: Option<u32>,
+    pub cpu_period: Option<String>,
+    pub cpu_quota: Option<String>,
+    pub cpu_rt_runtime: Option<String>,
+    pub cpu_rt_period: Option<String>,
+    pub cpus: Option<f32>, // deprecated
+    pub cpuset: Option<u8>,
+    pub cap_add: Option<Vec<String>>, // TODO: define capabilities enum
     pub cap_drop: Vec<String>,
-    pub cgroup: String, // define cgroup enum (host, private)
-    pub cgroup_parent: String,
-    pub command: String,      // could also be Vec<String>
-    pub configs: Vec<String>, // needs to exist in config top level
-    pub container_name: String,
-    pub credential_spec: String, // file, registry, config
-    pub depends_on: String,      // existing service
-    pub deploy: String,
-    pub device_cgroup_rules: Vec<String>,
-    pub devices: Vec<String>,
-    pub dns: Vec<String>, // could also just be a string
-    pub dns_opt: Vec<String>,
-    pub dns_search: Vec<String>, // could also be a string
-    pub domainname: String,
-    pub entrypoint: Vec<String>,
-    pub env_file: Vec<String>,
-    pub environment: Vec<String>,
-    pub expose: Vec<String>,
-    pub extends: String, // file, service enum
+    pub cgroup: Option<Cgroup>, // define cgroup enum (host, private)
+    pub cgroup_parent: Option<String>,
+    pub command: Option<Command>,
+    pub configs: Option<Vec<String>>, // needs to exist in config top level
+    pub container_name: Option<String>,
+    pub credential_spec: Option<CredentialSpec>, // file, registry, config
+    pub depends_on: Option<DependsOn>,      // existing service
+    pub deploy: Option<deploy::Deploy>,
+    pub device_cgroup_rules: Option<Vec<String>>,
+    pub devices: Option<Vec<String>>,
+    pub dns: Option<Vec<Labels>>,
+    pub dns_opt: Option<Vec<String>>,
+    pub dns_search: Option<Vec<Labels>>,
+    pub domainname: Option<String>,
+    pub entrypoint: Option<Vec<Labels>>,
+    pub env_file: Option<Vec<Labels>>,
+    pub environment: Option<Vec<Labels>>,
+    pub expose: Option<Vec<String>>,
+    pub extends: String, // file, service struct
     pub annotations: Vec<String>,
     pub external_links: Vec<String>,
     pub extra_hosts: Vec<String>,
@@ -84,6 +91,54 @@ pub struct Services {
     pub volumes: Vec<String>, // enum
     pub volumes_from: Vec<String>,
     pub working_dir: String,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(untagged)]
+pub enum Labels {
+    List(Vec<String>),
+    Map(HashMap<String, String>),
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum Cgroup {
+    Host,
+    Private,
+}
+
+#[derive(Debug, Deserialize)]
+pub enum Command {
+    String(String),
+    List(Vec<String>),
+}
+
+#[derive(Debug, Deserialize)]
+pub struct CredentialSpec {
+    pub file: Option<String>,
+    pub registry: Option<String>,
+    pub config: Option<String>,  // must be valid config
+}
+
+#[derive(Debug, Deserialize)]
+pub enum DependsOn {
+    List(Vec<String>), // must be valid services
+    Map(HashMap<String, DependsOnDetail>),
+}
+
+#[derive(Debug, Deserialize)]
+pub struct DependsOnDetail {
+    pub restart: Option<bool>,
+    pub condition: Option<DependsOnCondition>,
+    pub required: Option<bool>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum DependsOnCondition {
+    ServiceStarted,
+    ServiceHealthy,
+    ServiceCompletedSuccessfully,
 }
 
 #[cfg(test)]
