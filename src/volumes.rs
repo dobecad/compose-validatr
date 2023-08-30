@@ -102,15 +102,17 @@ mod tests {
             volumes.volumes["vol3"].as_ref().unwrap().external,
             Some("ext_vol".to_string())
         );
-        assert_eq!(
-            volumes.volumes["vol3"]
-                .as_ref()
-                .unwrap()
-                .labels
-                .iter()
-                .len(),
-            2
-        );
+        if let Some(labels) = &volumes.volumes["vol3"].as_ref().unwrap().labels {
+            match labels {
+                Labels::List(list) => {
+                    assert_eq!(list, &vec!["label1".to_string(), "label2".to_string()]);
+                    assert_eq!(list.len(), 2);
+                }
+                _ => panic!("Unexpected labels format"),
+            }
+        } else {
+            panic!("No labels found");
+        }
         assert_eq!(
             volumes.volumes["vol4"].as_ref().unwrap().name,
             Some("named_vol".to_string())
