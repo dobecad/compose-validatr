@@ -1,6 +1,8 @@
 use serde::Deserialize;
 use std::collections::HashMap;
 
+use crate::services::Labels;
+
 #[derive(Debug, Deserialize)]
 pub struct Networks {
     networks: HashMap<String, Option<NetworkAttributes>>,
@@ -33,13 +35,6 @@ pub enum Driver {
     None,
     Default,
     Host,
-}
-
-#[derive(Debug, Deserialize)]
-#[serde(untagged)]
-pub enum Labels {
-    List(Vec<String>),
-    Map(HashMap<String, String>),
 }
 
 #[derive(Debug, Deserialize)]

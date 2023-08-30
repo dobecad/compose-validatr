@@ -1,6 +1,8 @@
 use serde::Deserialize;
 use std::collections::HashMap;
 
+use crate::services::Labels;
+
 #[derive(Debug, Deserialize)]
 pub struct Volumes {
     pub volumes: HashMap<String, Option<VolumeAttributes>>,
@@ -21,13 +23,6 @@ pub struct DriverOpts {
     pub driver_type: Option<String>,
     pub o: Option<String>,
     pub device: Option<String>,
-}
-
-#[derive(Debug, Deserialize)]
-#[serde(untagged)]
-pub enum Labels {
-    List(Vec<String>),
-    Map(HashMap<String, String>),
 }
 
 #[cfg(test)]
