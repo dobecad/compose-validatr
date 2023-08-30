@@ -23,15 +23,15 @@ mod tests {
     fn test_deserialize_secrets() {
         let yaml = r#"
             secrets:
-              "secret1":
-                file: "path/to/secret1"
-              "secret2":
-                file: "path/to/secret2"
-                environment: "ENV_VAR"
-              "secret3":
-                external: true
-              "secret4":
-                name: "named_secret"
+                "secret1":
+                    file: "path/to/secret1"
+                "secret2":
+                    file: "path/to/secret2"
+                    environment: "ENV_VAR"
+                "secret3":
+                    external: true
+                "secret4":
+                    name: "named_secret"
         "#;
 
         let secrets: Secrets = serde_yaml::from_str(yaml).unwrap();
