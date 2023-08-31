@@ -1,5 +1,5 @@
-use serde::Deserialize;
 use super::Labels;
+use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
 pub struct Deploy {
@@ -46,7 +46,7 @@ pub struct Limits {
     pub memory: Option<String>,
     pub pids: Option<u16>,
     pub devices: Option<Vec<DriverCapabilities>>,
-    pub capabilities: Option<Vec<DriverCapabilities>>
+    pub capabilities: Option<Vec<DriverCapabilities>>,
 }
 
 #[derive(Debug, Deserialize)]

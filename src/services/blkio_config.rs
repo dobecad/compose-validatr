@@ -43,5 +43,5 @@ pub struct DeviceWriteIops {
 #[derive(Debug, Deserialize)]
 pub enum Rate {
     String(String),
-    Bytes(u64)
+    Bytes(u64),
 }
