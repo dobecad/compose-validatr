@@ -3,6 +3,7 @@ use std::collections::HashMap;
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
+#[serde(untagged)]
 pub enum Secrets {
     Short(Vec<String>),
     Long(HashMap<String, SecretOptions>),

@@ -3,7 +3,7 @@ use serde::Deserialize;
 use crate::services::Labels;
 
 #[derive(Debug, Deserialize)]
-pub struct Volumes {
+pub struct Volume {
     pub driver: Option<String>,
     pub driver_opts: Option<DriverOpts>,
     pub external: Option<bool>,
@@ -29,7 +29,7 @@ mod tests {
         let yaml = r#"
             external: true
         "#;
-        let volumes: Volumes = serde_yaml::from_str(yaml).unwrap();
+        let volumes: Volume = serde_yaml::from_str(yaml).unwrap();
         assert_eq!(volumes.external.unwrap(), true);
     }
 
@@ -46,7 +46,7 @@ mod tests {
                 - "label2"
         "#;
 
-        let volumes: Volumes = serde_yaml::from_str(yaml).unwrap();
+        let volumes: Volume = serde_yaml::from_str(yaml).unwrap();
 
         assert_eq!(volumes.driver.unwrap(), "driver2".to_string());
         assert_eq!(

@@ -3,6 +3,7 @@ use std::collections::HashMap;
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
+#[serde(untagged)]
 pub enum Networks {
     List(Vec<String>),
     Map(HashMap<String, NetworkOptions>),

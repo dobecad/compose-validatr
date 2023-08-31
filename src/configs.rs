@@ -1,7 +1,7 @@
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
-pub struct Configs {
+pub struct Config {
     pub file: Option<String>,
     pub external: Option<bool>,
     pub name: Option<String>,
@@ -20,7 +20,7 @@ mod tests {
           name: "named_config"
         "#;
 
-        let configs: Configs = serde_yaml::from_str(yaml).unwrap();
+        let configs: Config = serde_yaml::from_str(yaml).unwrap();
 
         assert_eq!(configs.file.unwrap(), "path/to/config1".to_string());
         assert_eq!(configs.external.unwrap(), true);

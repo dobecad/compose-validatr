@@ -13,7 +13,7 @@ use std::collections::HashMap;
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
-pub struct Services {
+pub struct Service {
     pub attach: Option<bool>,
     pub build: Option<build::Build>,
     pub blkio_config: Option<blkio_config::BlkioConfig>,
@@ -27,7 +27,7 @@ pub struct Services {
     pub cpus: Option<f32>, // deprecated
     pub cpuset: Option<u8>,
     pub cap_add: Option<Vec<String>>, // TODO: define capabilities enum
-    pub cap_drop: Vec<String>,
+    pub cap_drop: Option<Vec<String>>,
     pub cgroup: Option<Cgroup>, // define cgroup enum (host, private)
     pub cgroup_parent: Option<String>,
     pub command: Option<Command>,
@@ -75,7 +75,7 @@ pub struct Services {
     pub platform: Option<String>,
     pub ports: Option<Vec<String>>,
     pub privileged: Option<bool>,
-    pub profiles: Vec<String>,
+    pub profiles: Option<Vec<String>>,
     pub pull_policy: Option<PullPolicy>,
     pub read_only: Option<bool>,
     pub restart: Option<Restart>,
@@ -83,7 +83,7 @@ pub struct Services {
     pub scale: Option<u32>, // deprecated
     pub secrets: Option<secrets::Secrets>,
     pub secruity_opt: Option<Vec<String>>,
-    pub shm_size: Option<u32>,
+    pub shm_size: Option<String>,
     pub stdin_open: Option<String>,
     pub stop_grace_period: Option<String>,
     pub stop_signal: Option<String>,
@@ -121,6 +121,7 @@ pub enum Cgroup {
 }
 
 #[derive(Debug, Deserialize)]
+#[serde(untagged)]
 pub enum Command {
     String(String),
     List(Vec<String>),
@@ -134,6 +135,7 @@ pub struct CredentialSpec {
 }
 
 #[derive(Debug, Deserialize)]
+#[serde(untagged)]
 pub enum DependsOn {
     List(Vec<String>), // must be valid services
     Map(HashMap<String, DependsOnDetail>),

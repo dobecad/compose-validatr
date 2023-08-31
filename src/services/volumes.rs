@@ -1,7 +1,9 @@
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
+#[serde(untagged)]
 pub enum Volumes {
+    String(String),
     Short(ShortVolumeOptions),
     Long(LongVolumeOptions),
 }

@@ -1,6 +1,7 @@
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
+#[serde(untagged)]
 pub enum Ports {
     Short(Vec<String>),
     Long(Vec<PortOptions>),
