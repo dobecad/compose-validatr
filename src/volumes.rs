@@ -27,7 +27,6 @@ mod tests {
     #[test]
     fn test_deserialize_correct_volume() {
         let yaml = r#"
-        db-data:
             external: true
         "#;
         let volumes: Volumes = serde_yaml::from_str(yaml).unwrap();
