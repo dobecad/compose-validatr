@@ -3,12 +3,12 @@ use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
 pub struct Compose {
-    pub version: String,
+    pub version: Option<String>,
     pub services: services::Services,
-    pub networks: network::Networks,
-    pub volumes: volumes::Volumes,
-    pub configs: configs::Configs,
-    pub secrets: secrets::Secrets,
+    pub networks: Option<network::Networks>,
+    pub volumes: Option<volumes::Volumes>,
+    pub configs: Option<configs::Configs>,
+    pub secrets: Option<secrets::Secrets>,
 }
 
 #[cfg(test)]
