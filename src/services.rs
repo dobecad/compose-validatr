@@ -1,6 +1,12 @@
-mod build;
 mod blkio_config;
+mod build;
 mod deploy;
+mod healthcheck;
+mod logging;
+mod networks;
+mod ports;
+mod secrets;
+mod volumes;
 
 use std::collections::HashMap;
 
@@ -28,69 +34,69 @@ pub struct Services {
     pub configs: Option<Vec<String>>, // needs to exist in config top level
     pub container_name: Option<String>,
     pub credential_spec: Option<CredentialSpec>, // file, registry, config
-    pub depends_on: Option<DependsOn>,      // existing service
+    pub depends_on: Option<DependsOn>,           // existing service
     pub deploy: Option<deploy::Deploy>,
     pub device_cgroup_rules: Option<Vec<String>>,
     pub devices: Option<Vec<String>>,
-    pub dns: Option<Vec<Labels>>,
+    pub dns: Option<Labels>,
     pub dns_opt: Option<Vec<String>>,
-    pub dns_search: Option<Vec<Labels>>,
+    pub dns_search: Option<Labels>,
     pub domainname: Option<String>,
-    pub entrypoint: Option<Vec<Labels>>,
-    pub env_file: Option<Vec<Labels>>,
-    pub environment: Option<Vec<Labels>>,
+    pub entrypoint: Option<Labels>,
+    pub env_file: Option<Labels>,
+    pub environment: Option<Labels>,
     pub expose: Option<Vec<String>>,
-    pub extends: String, // file, service struct
-    pub annotations: Vec<String>,
-    pub external_links: Vec<String>,
-    pub extra_hosts: Vec<String>,
-    pub group_add: Vec<String>,
-    pub healthcheck: String, // need struct
-    pub hostname: String,
-    pub image: String,
-    pub init: bool,
-    pub ipc: String,
-    pub uts: String,
-    pub isolation: String,
-    pub labels: Vec<String>,
-    pub links: Vec<String>,
-    pub logging: String, // need struct
-    pub network_mode: String,
-    pub networks: Vec<String>,
-    pub mac_address: String,
-    pub mem_limit: String,       // deprecated
-    pub mem_reservation: String, // deprecated
-    pub mem_swappiness: u8,
-    pub memswap_limit: String,
-    pub oom_kill_disable: bool,
-    pub oom_score_adj: i16,
-    pub pid: u32,
-    pub pids_limit: u32,
-    pub platform: String,
-    pub ports: Vec<String>,
-    pub privileged: bool,
+    pub extends: Option<Extends>,
+    pub annotations: Option<Labels>,
+    pub external_links: Option<Vec<String>>,
+    pub extra_hosts: Option<Labels>,
+    pub group_add: Option<Vec<String>>,
+    pub healthcheck: Option<healthcheck::HealthCheck>,
+    pub hostname: Option<String>,
+    pub image: Option<String>,
+    pub init: Option<bool>,
+    pub ipc: Option<String>,
+    pub uts: Option<String>,
+    pub isolation: Option<String>, // TODO: Verify this
+    pub labels: Option<Labels>,
+    pub links: Option<Vec<String>>,
+    pub logging: Option<logging::Logging>,
+    pub network_mode: Option<String>, // TODO: Maybe make enum for this?
+    pub networks: Option<networks::Networks>,
+    pub mac_address: Option<String>,
+    pub mem_limit: Option<String>,       // deprecated
+    pub mem_reservation: Option<String>, // deprecated
+    pub mem_swappiness: Option<u8>,
+    pub memswap_limit: Option<String>,
+    pub oom_kill_disable: Option<bool>,
+    pub oom_score_adj: Option<i16>,
+    pub pid: Option<u32>,
+    pub pids_limit: Option<u32>,
+    pub platform: Option<String>,
+    pub ports: Option<Vec<String>>,
+    pub privileged: Option<bool>,
     pub profiles: Vec<String>,
-    pub pull_policy: String, // enum
-    pub read_only: bool,
-    pub restart: String, // enum
-    pub runtime: String,
-    pub scale: u32,      // deprecated
-    pub secrets: String, // valid secrets
-    pub secruity_opt: Vec<String>,
-    pub shm_size: u32,
-    pub stdin_open: String,
-    pub stop_grace_period: String,
-    pub stop_signal: String,
-    pub storage_opt: String, // enum
-    pub sysctls: Vec<String>,
-    pub tmpfs: String,
-    pub tty: String,
-    pub ulimits: String, // enum
-    pub user: String,
-    pub userns_mode: String,
-    pub volumes: Vec<String>, // enum
-    pub volumes_from: Vec<String>,
-    pub working_dir: String,
+    pub pull_policy: Option<PullPolicy>,
+    pub read_only: Option<bool>,
+    pub restart: Option<Restart>,
+    pub runtime: Option<String>,
+    pub scale: Option<u32>, // deprecated
+    pub secrets: Option<secrets::Secrets>,
+    pub secruity_opt: Option<Vec<String>>,
+    pub shm_size: Option<u32>,
+    pub stdin_open: Option<String>,
+    pub stop_grace_period: Option<String>,
+    pub stop_signal: Option<String>,
+    pub storage_opt: Option<String>,
+    pub sysctls: Option<Labels>,
+    pub tmpfs: Option<Tmpfs>,
+    pub tty: Option<String>,
+    pub ulimits: Option<Ulimits>,
+    pub user: Option<String>,
+    pub userns_mode: Option<String>,
+    pub volumes: Option<Vec<volumes::Volumes>>, // enum
+    pub volumes_from: Option<Vec<String>>,
+    pub working_dir: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -98,6 +104,13 @@ pub struct Services {
 pub enum Labels {
     List(Vec<String>),
     Map(HashMap<String, String>),
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(untagged)]
+pub enum Tmpfs {
+    String(String),
+    List(Vec<String>),
 }
 
 #[derive(Debug, Deserialize)]
@@ -117,7 +130,7 @@ pub enum Command {
 pub struct CredentialSpec {
     pub file: Option<String>,
     pub registry: Option<String>,
-    pub config: Option<String>,  // must be valid config
+    pub config: Option<String>, // must be valid config
 }
 
 #[derive(Debug, Deserialize)]
@@ -139,6 +152,43 @@ pub enum DependsOnCondition {
     ServiceStarted,
     ServiceHealthy,
     ServiceCompletedSuccessfully,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct Extends {
+    // https://docs.docker.com/compose/compose-file/05-services/#extends
+    pub file: String,
+    pub service: String,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum PullPolicy {
+    Always,
+    Never,
+    Missing,
+    Build,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum Restart {
+    No,
+    Always,
+    OnFailure,
+    UnlessStopped,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct Ulimits {
+    pub nproc: u16,
+    pub nofile: Nofile,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct Nofile {
+    pub soft: u16,
+    pub hard: u16,
 }
 
 #[cfg(test)]
