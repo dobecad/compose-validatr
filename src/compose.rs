@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+use crate::{errors::{ValidationError, ValidationErrors}, networks::Network};
+
 use super::{configs, networks, secrets, services, volumes};
 use serde::Deserialize;
 use serde_yaml;
@@ -15,10 +17,41 @@ pub struct Compose {
 }
 
 impl Compose {
-    pub fn validate(contents: &str) -> Result<Self, Box<dyn std::error::Error>> {
-        let compose: Self = serde_yaml::from_str(contents)?;
-        Ok(compose)
+    pub fn new(contents: &str) -> Result<Self, ValidationErrors> {
+        let mut errors = ValidationErrors::new();
+        let compose: Result<Self, ValidationError> = serde_yaml::from_str(contents)
+            .map_err(|e| ValidationError::InvalidCompose(e.to_string()));
+
+        match compose {
+            Ok(c) => {
+                if let Some(networks) = &c.networks {
+                    Self::validate_networks(networks, &mut errors);
+                };
+                Ok(c)
+            },
+            Err(err) => {
+                errors.add_error(err);
+                Err(errors)
+            }
+        }
     }
+
+    fn validate_networks(networks: &HashMap<String, Option<Network>>, errors: &mut ValidationErrors) {
+        for (_, network_attributes) in networks {
+            if let Some(network) = network_attributes {
+                network.validate(errors); 
+            }
+        }
+    }
+}
+
+/// This trait needs to be implemented for top level elements
+pub(crate) trait Validate {
+    /// Validate an attribute is valid within the context of the compose yaml
+    /// 
+    /// Push all validation errors to the ValidationErrors so that users are able to see
+    /// all of their errors at once, versus incrementally
+    fn validate(&self, errors: &mut ValidationErrors);
 }
 
 #[cfg(test)]
@@ -30,7 +63,7 @@ mod tests {
         let yaml = r#"
         "#;
 
-        let compose = Compose::validate(yaml);
+        let compose = Compose::new(yaml);
         assert!(compose.is_err());
     }
 
@@ -143,7 +176,7 @@ mod tests {
           default:
             driver: bridge
         "#;
-        let compose = Compose::validate(yaml);
+        let compose = Compose::new(yaml);
         assert!(compose.is_ok());
     }
 }

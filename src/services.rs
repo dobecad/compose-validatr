@@ -12,6 +12,8 @@ use std::collections::HashMap;
 
 use serde::Deserialize;
 
+use crate::{compose::Validate, errors::ValidationErrors};
+
 #[derive(Debug, Deserialize)]
 pub struct Service {
     pub attach: Option<bool>,
@@ -191,6 +193,12 @@ pub struct Ulimits {
 pub struct Nofile {
     pub soft: u16,
     pub hard: u16,
+}
+
+impl Validate for Service {
+    fn validate(&self, errors: &mut ValidationErrors) {
+        todo!()
+    }
 }
 
 #[cfg(test)]

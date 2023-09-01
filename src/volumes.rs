@@ -1,6 +1,8 @@
 use serde::Deserialize;
 
+use crate::errors::ValidationErrors;
 use crate::services::Labels;
+use crate::compose::Validate;
 
 #[derive(Debug, Deserialize)]
 pub struct Volume {
@@ -17,6 +19,12 @@ pub struct DriverOpts {
     pub driver_type: Option<String>,
     pub o: Option<String>,
     pub device: Option<String>,
+}
+
+impl Validate for Volume {
+    fn validate(&self, errors: &mut ValidationErrors) {
+        todo!()
+    }
 }
 
 #[cfg(test)]

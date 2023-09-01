@@ -1,11 +1,19 @@
 use serde::Deserialize;
 
+use crate::{compose::Validate, errors::ValidationErrors};
+
 #[derive(Debug, Deserialize)]
 pub struct Secret {
     pub file: Option<String>,
     pub environment: Option<String>,
     pub external: Option<bool>,
     pub name: Option<String>,
+}
+
+impl Validate for Secret {
+    fn validate(&self, errors: &mut ValidationErrors) {
+        todo!()
+    }
 }
 
 #[cfg(test)]
