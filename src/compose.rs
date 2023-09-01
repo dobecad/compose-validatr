@@ -29,6 +29,9 @@ mod tests {
     fn simple_compose() {
         let yaml = r#"
         "#;
+
+        let compose = Compose::validate(yaml);
+        assert!(compose.is_err());
     }
 
     #[test]
