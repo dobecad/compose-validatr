@@ -197,7 +197,7 @@ pub struct Nofile {
 
 impl Validate for Service {
     fn validate(&self, errors: &mut ValidationErrors) {
-        todo!()
+        ()
     }
 }
 

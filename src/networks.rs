@@ -1,7 +1,7 @@
 use serde::Deserialize;
 use std::collections::HashMap;
 
-use crate::{services::Labels, compose::Validate, errors::ValidationErrors};
+use crate::{compose::Validate, errors::ValidationErrors, services::Labels};
 
 #[derive(Debug, Deserialize)]
 pub struct Network {
@@ -44,7 +44,7 @@ pub struct Config {
 
 impl Validate for Network {
     fn validate(&self, errors: &mut ValidationErrors) {
-        todo!()
+        ()
     }
 }
 

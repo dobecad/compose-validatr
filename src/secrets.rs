@@ -12,7 +12,7 @@ pub struct Secret {
 
 impl Validate for Secret {
     fn validate(&self, errors: &mut ValidationErrors) {
-        todo!()
+        ()
     }
 }
 

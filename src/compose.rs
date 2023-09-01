@@ -1,6 +1,13 @@
 use std::collections::HashMap;
 
-use crate::{errors::{ValidationError, ValidationErrors}, networks::Network};
+use crate::{
+    configs::Config,
+    errors::{ValidationError, ValidationErrors},
+    networks::Network,
+    secrets::Secret,
+    services::Service,
+    volumes::Volume,
+};
 
 use super::{configs, networks, secrets, services, volumes};
 use serde::Deserialize;
@@ -27,8 +34,18 @@ impl Compose {
                 if let Some(networks) = &c.networks {
                     Self::validate_networks(networks, &mut errors);
                 };
+                if let Some(volumes) = &c.volumes {
+                    Self::validate_volumes(volumes, &mut errors);
+                };
+                if let Some(configs) = &c.configs {
+                    Self::validate_configs(configs, &mut errors);
+                };
+                if let Some(secrets) = &c.secrets {
+                    Self::validate_secrets(secrets, &mut errors);
+                };
+                Self::validate_services(&c.services, &mut errors);
                 Ok(c)
-            },
+            }
             Err(err) => {
                 errors.add_error(err);
                 Err(errors)
@@ -36,11 +53,44 @@ impl Compose {
         }
     }
 
-    fn validate_networks(networks: &HashMap<String, Option<Network>>, errors: &mut ValidationErrors) {
+    fn validate_networks(
+        networks: &HashMap<String, Option<Network>>,
+        errors: &mut ValidationErrors,
+    ) {
         for (_, network_attributes) in networks {
             if let Some(network) = network_attributes {
-                network.validate(errors); 
+                network.validate(errors);
             }
+        }
+    }
+
+    fn validate_volumes(volumes: &HashMap<String, Option<Volume>>, errors: &mut ValidationErrors) {
+        for (_, volume_attributes) in volumes {
+            if let Some(volume) = volume_attributes {
+                volume.validate(errors);
+            }
+        }
+    }
+
+    fn validate_configs(configs: &HashMap<String, Option<Config>>, errors: &mut ValidationErrors) {
+        for (_, config_attributes) in configs {
+            if let Some(config) = config_attributes {
+                config.validate(errors);
+            }
+        }
+    }
+
+    fn validate_secrets(secrets: &HashMap<String, Option<Secret>>, errors: &mut ValidationErrors) {
+        for (_, secret_attributes) in secrets {
+            if let Some(secret) = secret_attributes {
+                secret.validate(errors);
+            }
+        }
+    }
+
+    fn validate_services(services: &HashMap<String, Service>, errors: &mut ValidationErrors) {
+        for (_, service) in services {
+            service.validate(errors);
         }
     }
 }
@@ -48,7 +98,7 @@ impl Compose {
 /// This trait needs to be implemented for top level elements
 pub(crate) trait Validate {
     /// Validate an attribute is valid within the context of the compose yaml
-    /// 
+    ///
     /// Push all validation errors to the ValidationErrors so that users are able to see
     /// all of their errors at once, versus incrementally
     fn validate(&self, errors: &mut ValidationErrors);
