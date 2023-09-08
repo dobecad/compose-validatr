@@ -11,6 +11,8 @@ pub struct Config {
 
 impl Validate for Config {
     fn validate(&self, errors: &mut ValidationErrors) {
+        // Nothing to validate
+        // Not interested in validating the existence of files on host
         ()
     }
 }
