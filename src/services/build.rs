@@ -2,7 +2,10 @@ use std::collections::HashMap;
 
 use serde::Deserialize;
 
-use crate::compose::{Compose, Validate};
+use crate::{
+    compose::{Compose, Validate},
+    errors::ValidationError,
+};
 
 #[derive(Debug, Deserialize)]
 #[serde(untagged)]
@@ -67,7 +70,13 @@ pub enum ShmSize {
 }
 
 #[derive(Debug, Deserialize)]
-pub struct BuildSecret {
+pub enum BuildSecret {
+    Short(String),
+    Long(SecretDetails),
+}
+
+#[derive(Debug, Deserialize)]
+pub struct SecretDetails {
     pub source: String,
     pub target: String,
     pub uid: String,
@@ -77,6 +86,33 @@ pub struct BuildSecret {
 
 impl Validate for Build {
     fn validate(&self, ctx: &Compose, errors: &mut crate::errors::ValidationErrors) {
-        todo!()
+        // Check that specified secrets exist
+        match self {
+            Build::Map(details) => {
+                let results = details.secrets.as_ref().map(|s| {
+                    s.iter().all(|secret| match secret {
+                        BuildSecret::Short(short) => ctx
+                            .secrets
+                            .as_ref()
+                            .map(|x| x.contains_key(short))
+                            .is_some(),
+                        BuildSecret::Long(details) => ctx
+                            .secrets
+                            .as_ref()
+                            .map(|x| x.contains_key(&details.source))
+                            .is_some(),
+                    })
+                });
+                results.as_ref().map(|r| {
+                    if !r {
+                        errors.add_error(ValidationError::InvalidValue(
+                            "Build definition secret is not defined".to_string(),
+                        ));
+                    }
+                });
+            }
+            _ => (),
+        }
+        ()
     }
 }
