@@ -1,6 +1,7 @@
 use ipnetwork::IpNetwork;
 use serde::Deserialize;
 use std::collections::HashMap;
+use crate::compose::Compose;
 
 use crate::{compose::Validate, errors::{ValidationErrors, ValidationError}, services::Labels};
 
@@ -73,6 +74,10 @@ impl Validate for Network {
                 }
             }
         }
+    }
+
+    fn validate_with_context(&self, _: &Compose, _: &mut ValidationErrors) {
+        ()
     }
 }
 

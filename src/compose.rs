@@ -102,6 +102,8 @@ pub(crate) trait Validate {
     /// Push all validation errors to the ValidationErrors so that users are able to see
     /// all of their errors at once, versus incrementally
     fn validate(&self, errors: &mut ValidationErrors);
+
+    fn validate_with_context(&self, ctx: &Compose, errors: &mut ValidationErrors);
 }
 
 #[cfg(test)]

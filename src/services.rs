@@ -9,6 +9,7 @@ mod secrets;
 mod volumes;
 
 use std::collections::HashMap;
+use crate::compose::Compose;
 
 use serde::Deserialize;
 
@@ -197,6 +198,10 @@ pub struct Nofile {
 
 impl Validate for Service {
     fn validate(&self, errors: &mut ValidationErrors) {
+        ()
+    }
+
+    fn validate_with_context(&self, ctx: &Compose, errors: &mut ValidationErrors) {
         ()
     }
 }
