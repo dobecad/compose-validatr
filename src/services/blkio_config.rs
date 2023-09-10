@@ -50,6 +50,7 @@ pub enum Rate {
 
 impl Validate for BlkioConfig {
     fn validate(&self, ctx: &Compose, errors: &mut crate::errors::ValidationErrors) {
-        todo!()
+        // Not interested in verifying host devices
+        ()
     }
 }
