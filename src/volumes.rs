@@ -1,9 +1,9 @@
 use serde::Deserialize;
 
+use crate::compose::Compose;
 use crate::compose::Validate;
 use crate::errors::ValidationErrors;
 use crate::services::Labels;
-use crate::compose::Compose;
 
 #[derive(Debug, Deserialize)]
 pub struct Volume {
@@ -23,13 +23,9 @@ pub struct DriverOpts {
 }
 
 impl Validate for Volume {
-    fn validate(&self, _: &mut ValidationErrors) {
+    fn validate(&self, ctx: &Compose, _: &mut ValidationErrors) {
         // Nothing to really validate here
         // Not too interested in validating the existence of drivers on the host
-        ()
-    }
-
-    fn validate_with_context(&self, _: &Compose, _: &mut ValidationErrors) {
         ()
     }
 }

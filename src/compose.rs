@@ -32,18 +32,18 @@ impl Compose {
         match compose {
             Ok(c) => {
                 if let Some(networks) = &c.networks {
-                    Self::validate_networks(networks, &mut errors);
+                    Self::validate_networks(&c, networks, &mut errors);
                 };
                 if let Some(volumes) = &c.volumes {
-                    Self::validate_volumes(volumes, &mut errors);
+                    Self::validate_volumes(&c, volumes, &mut errors);
                 };
                 if let Some(configs) = &c.configs {
-                    Self::validate_configs(configs, &mut errors);
+                    Self::validate_configs(&c, configs, &mut errors);
                 };
                 if let Some(secrets) = &c.secrets {
-                    Self::validate_secrets(secrets, &mut errors);
+                    Self::validate_secrets(&c, secrets, &mut errors);
                 };
-                Self::validate_services(&c.services, &mut errors);
+                Self::validate_services(&c, &c.services, &mut errors);
                 Ok(c)
             }
             Err(err) => {
@@ -54,43 +54,48 @@ impl Compose {
     }
 
     fn validate_networks(
+        compose: &Compose,
         networks: &HashMap<String, Option<Network>>,
         errors: &mut ValidationErrors,
     ) {
         for (_, network_attributes) in networks {
             if let Some(network) = network_attributes {
-                network.validate(errors);
+                network.validate(compose, errors);
             }
         }
     }
 
-    fn validate_volumes(volumes: &HashMap<String, Option<Volume>>, errors: &mut ValidationErrors) {
+    fn validate_volumes(
+        compose: &Compose,
+        volumes: &HashMap<String, Option<Volume>>,
+        errors: &mut ValidationErrors,
+    ) {
         for (_, volume_attributes) in volumes {
             if let Some(volume) = volume_attributes {
-                volume.validate(errors);
+                volume.validate(compose, errors);
             }
         }
     }
 
-    fn validate_configs(configs: &HashMap<String, Option<Config>>, errors: &mut ValidationErrors) {
+    fn validate_configs(compose: &Compose, configs: &HashMap<String, Option<Config>>, errors: &mut ValidationErrors) {
         for (_, config_attributes) in configs {
             if let Some(config) = config_attributes {
-                config.validate(errors);
+                config.validate(compose, errors);
             }
         }
     }
 
-    fn validate_secrets(secrets: &HashMap<String, Option<Secret>>, errors: &mut ValidationErrors) {
+    fn validate_secrets(compose: &Compose, secrets: &HashMap<String, Option<Secret>>, errors: &mut ValidationErrors) {
         for (_, secret_attributes) in secrets {
             if let Some(secret) = secret_attributes {
-                secret.validate(errors);
+                secret.validate(compose, errors);
             }
         }
     }
 
-    fn validate_services(services: &HashMap<String, Service>, errors: &mut ValidationErrors) {
+    fn validate_services(compose: &Compose, services: &HashMap<String, Service>, errors: &mut ValidationErrors) {
         for (_, service) in services {
-            service.validate(errors);
+            service.validate(compose, errors);
         }
     }
 }
@@ -101,10 +106,7 @@ pub(crate) trait Validate {
     ///
     /// Push all validation errors to the ValidationErrors so that users are able to see
     /// all of their errors at once, versus incrementally
-    fn validate(&self, errors: &mut ValidationErrors);
-
-    /// Validate an attribute with the given context of the compose file
-    fn validate_with_context(&self, ctx: &Compose, errors: &mut ValidationErrors);
+    fn validate(&self, ctx: &Compose, errors: &mut ValidationErrors);
 }
 
 #[cfg(test)]

@@ -12,13 +12,9 @@ pub struct Secret {
 }
 
 impl Validate for Secret {
-    fn validate(&self, _: &mut ValidationErrors) {
+    fn validate(&self, _: &Compose, _: &mut ValidationErrors) {
         // Nothing to validate
         // Not interested in validating the existence of files on host
-        ()
-    }
-
-    fn validate_with_context(&self, _: &Compose, _: &mut ValidationErrors) {
         ()
     }
 }
