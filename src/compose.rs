@@ -103,6 +103,7 @@ pub(crate) trait Validate {
     /// all of their errors at once, versus incrementally
     fn validate(&self, errors: &mut ValidationErrors);
 
+    /// Validate an attribute with the given context of the compose file
     fn validate_with_context(&self, ctx: &Compose, errors: &mut ValidationErrors);
 }
 
