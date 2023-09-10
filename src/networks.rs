@@ -1,9 +1,13 @@
+use crate::compose::Compose;
 use ipnetwork::IpNetwork;
 use serde::Deserialize;
 use std::collections::HashMap;
-use crate::compose::Compose;
 
-use crate::{compose::Validate, errors::{ValidationErrors, ValidationError}, services::Labels};
+use crate::{
+    compose::Validate,
+    errors::{ValidationError, ValidationErrors},
+    services::Labels,
+};
 
 #[derive(Debug, Deserialize)]
 pub struct Network {
@@ -50,26 +54,29 @@ impl Validate for Network {
             for c in config {
                 if let Some(subnet) = &c.subnet {
                     match subnet.parse::<IpNetwork>() {
-                        Err(e) => {
-                            errors.add_error(ValidationError::InvalidValue(format!("Invalid subnet address: {}", e)))
-                        }
-                        _ => ()
+                        Err(e) => errors.add_error(ValidationError::InvalidValue(format!(
+                            "Invalid subnet address: {}",
+                            e
+                        ))),
+                        _ => (),
                     }
                 }
                 if let Some(ip_range) = &c.ip_range {
                     match ip_range.parse::<IpNetwork>() {
-                        Err(e) => {
-                            errors.add_error(ValidationError::InvalidValue(format!("Invalid ip_range address: {}", e)))
-                        }
-                        _ => ()
+                        Err(e) => errors.add_error(ValidationError::InvalidValue(format!(
+                            "Invalid ip_range address: {}",
+                            e
+                        ))),
+                        _ => (),
                     }
                 }
                 if let Some(gateway) = &c.gateway {
                     match gateway.parse::<IpNetwork>() {
-                        Err(e) => {
-                            errors.add_error(ValidationError::InvalidValue(format!("Invalid ip_range address: {}", e)))
-                        }
-                        _ => ()
+                        Err(e) => errors.add_error(ValidationError::InvalidValue(format!(
+                            "Invalid ip_range address: {}",
+                            e
+                        ))),
+                        _ => (),
                     }
                 }
             }

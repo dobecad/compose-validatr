@@ -77,7 +77,11 @@ impl Compose {
         }
     }
 
-    fn validate_configs(compose: &Compose, configs: &HashMap<String, Option<Config>>, errors: &mut ValidationErrors) {
+    fn validate_configs(
+        compose: &Compose,
+        configs: &HashMap<String, Option<Config>>,
+        errors: &mut ValidationErrors,
+    ) {
         for (_, config_attributes) in configs {
             if let Some(config) = config_attributes {
                 config.validate(compose, errors);
@@ -85,7 +89,11 @@ impl Compose {
         }
     }
 
-    fn validate_secrets(compose: &Compose, secrets: &HashMap<String, Option<Secret>>, errors: &mut ValidationErrors) {
+    fn validate_secrets(
+        compose: &Compose,
+        secrets: &HashMap<String, Option<Secret>>,
+        errors: &mut ValidationErrors,
+    ) {
         for (_, secret_attributes) in secrets {
             if let Some(secret) = secret_attributes {
                 secret.validate(compose, errors);
@@ -93,7 +101,11 @@ impl Compose {
         }
     }
 
-    fn validate_services(compose: &Compose, services: &HashMap<String, Service>, errors: &mut ValidationErrors) {
+    fn validate_services(
+        compose: &Compose,
+        services: &HashMap<String, Service>,
+        errors: &mut ValidationErrors,
+    ) {
         for (_, service) in services {
             service.validate(compose, errors);
         }

@@ -1,5 +1,7 @@
 use serde::Deserialize;
 
+use crate::compose::{Compose, Validate};
+
 #[derive(Debug, Deserialize)]
 #[serde(untagged)]
 pub enum Ports {
@@ -26,4 +28,10 @@ pub enum Protocol {
 pub enum Mode {
     Host,
     Ingress,
+}
+
+impl Validate for Ports {
+    fn validate(&self, ctx: &Compose, errors: &mut crate::errors::ValidationErrors) {
+        todo!()
+    }
 }

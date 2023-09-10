@@ -1,5 +1,7 @@
 use serde::Deserialize;
 
+use crate::compose::{Compose, Validate};
+
 #[derive(Debug, Deserialize)]
 #[serde(untagged)]
 pub enum Volumes {
@@ -53,4 +55,10 @@ pub struct VolumeOptions {
 pub struct Tmpfs {
     pub size: String,
     pub mode: String,
+}
+
+impl Validate for Volumes {
+    fn validate(&self, ctx: &Compose, errors: &mut crate::errors::ValidationErrors) {
+        todo!()
+    }
 }

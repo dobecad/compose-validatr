@@ -8,8 +8,8 @@ mod ports;
 mod secrets;
 mod volumes;
 
-use std::collections::HashMap;
 use crate::compose::Compose;
+use std::collections::HashMap;
 
 use serde::Deserialize;
 
@@ -76,7 +76,7 @@ pub struct Service {
     pub pid: Option<u32>,
     pub pids_limit: Option<u32>,
     pub platform: Option<String>,
-    pub ports: Option<Vec<String>>,
+    pub ports: Option<ports::Ports>,
     pub privileged: Option<bool>,
     pub profiles: Option<Vec<String>>,
     pub pull_policy: Option<PullPolicy>,
@@ -196,13 +196,57 @@ pub struct Nofile {
     pub hard: u16,
 }
 
-impl Validate for Service {
-    fn validate(&self, errors: &mut ValidationErrors) {
-        ()
+impl Service {
+    fn validate_blkio_config(&self, ctx: &Compose, errors: &mut ValidationErrors) {
+        self.blkio_config.as_ref().map(|b| b.validate(ctx, errors));
     }
 
-    fn validate_with_context(&self, ctx: &Compose, errors: &mut ValidationErrors) {
-        ()
+    fn validate_build(&self, ctx: &Compose, errors: &mut ValidationErrors) {
+        self.build.as_ref().map(|b| b.validate(ctx, errors));
+    }
+
+    fn validate_deploy(&self, ctx: &Compose, errors: &mut ValidationErrors) {
+        self.deploy.as_ref().map(|d| d.validate(ctx, errors));
+    }
+
+    fn validate_healthcheck(&self, ctx: &Compose, errors: &mut ValidationErrors) {
+        self.healthcheck.as_ref().map(|h| h.validate(ctx, errors));
+    }
+
+    fn validate_logging(&self, ctx: &Compose, errors: &mut ValidationErrors) {
+        self.logging.as_ref().map(|l| l.validate(ctx, errors));
+    }
+
+    fn validate_networks(&self, ctx: &Compose, errors: &mut ValidationErrors) {
+        self.networks.as_ref().map(|n| n.validate(ctx, errors));
+    }
+
+    fn validate_ports(&self, ctx: &Compose, errors: &mut ValidationErrors) {
+        self.ports.as_ref().map(|p| p.validate(ctx, errors));
+    }
+
+    fn validate_secrets(&self, ctx: &Compose, errors: &mut ValidationErrors) {
+        self.secrets.as_ref().map(|s| s.validate(ctx, errors));
+    }
+
+    fn validate_volumes(&self, ctx: &Compose, errors: &mut ValidationErrors) {
+        self.volumes
+            .as_ref()
+            .map(|v| v.iter().for_each(|volume| volume.validate(ctx, errors)));
+    }
+}
+
+impl Validate for Service {
+    fn validate(&self, ctx: &Compose, errors: &mut ValidationErrors) {
+        self.validate_blkio_config(ctx, errors);
+        self.validate_build(ctx, errors);
+        self.validate_deploy(ctx, errors);
+        self.validate_healthcheck(ctx, errors);
+        self.validate_logging(ctx, errors);
+        self.validate_networks(ctx, errors);
+        self.validate_ports(ctx, errors);
+        self.validate_secrets(ctx, errors);
+        self.validate_volumes(ctx, errors);
     }
 }
 

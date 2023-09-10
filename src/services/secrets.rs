@@ -2,6 +2,8 @@ use std::collections::HashMap;
 
 use serde::Deserialize;
 
+use crate::compose::{Compose, Validate};
+
 #[derive(Debug, Deserialize)]
 #[serde(untagged)]
 pub enum Secrets {
@@ -16,4 +18,10 @@ pub struct SecretOptions {
     pub uid: String,
     pub gid: String,
     pub mode: String,
+}
+
+impl Validate for Secrets {
+    fn validate(&self, ctx: &Compose, errors: &mut crate::errors::ValidationErrors) {
+        todo!()
+    }
 }

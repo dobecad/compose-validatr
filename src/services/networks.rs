@@ -2,6 +2,8 @@ use std::collections::HashMap;
 
 use serde::Deserialize;
 
+use crate::compose::{Compose, Validate};
+
 #[derive(Debug, Deserialize)]
 #[serde(untagged)]
 pub enum Networks {
@@ -16,4 +18,10 @@ pub struct NetworkOptions {
     pub ipv6_address: Option<String>,
     pub link_local_ips: Option<Vec<String>>,
     pub priority: Option<u16>,
+}
+
+impl Validate for Networks {
+    fn validate(&self, ctx: &Compose, errors: &mut crate::errors::ValidationErrors) {
+        todo!()
+    }
 }

@@ -1,5 +1,5 @@
-use serde::Deserialize;
 use crate::compose::Compose;
+use serde::Deserialize;
 
 use crate::{compose::Validate, errors::ValidationErrors};
 

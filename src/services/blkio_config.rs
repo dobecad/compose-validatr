@@ -1,5 +1,7 @@
 use serde::Deserialize;
 
+use crate::compose::{Compose, Validate};
+
 #[derive(Debug, Deserialize)]
 pub struct BlkioConfig {
     pub weight: u16,
@@ -44,4 +46,10 @@ pub struct DeviceWriteIops {
 pub enum Rate {
     String(String),
     Bytes(u64),
+}
+
+impl Validate for BlkioConfig {
+    fn validate(&self, ctx: &Compose, errors: &mut crate::errors::ValidationErrors) {
+        todo!()
+    }
 }

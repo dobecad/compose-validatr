@@ -1,3 +1,5 @@
+use crate::compose::{Compose, Validate};
+
 use super::Labels;
 use serde::Deserialize;
 
@@ -103,4 +105,10 @@ pub struct UpdateConfig {
 pub enum FailureAction {
     Continue,
     Pause,
+}
+
+impl Validate for Deploy {
+    fn validate(&self, ctx: &Compose, errors: &mut crate::errors::ValidationErrors) {
+        todo!()
+    }
 }

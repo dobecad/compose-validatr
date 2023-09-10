@@ -1,5 +1,7 @@
 use serde::Deserialize;
 
+use crate::compose::{Compose, Validate};
+
 #[derive(Debug, Deserialize)]
 pub struct HealthCheck {
     pub test: Option<Test>,
@@ -15,4 +17,10 @@ pub struct HealthCheck {
 pub enum Test {
     String(String),
     List(Vec<String>),
+}
+
+impl Validate for HealthCheck {
+    fn validate(&self, ctx: &Compose, errors: &mut crate::errors::ValidationErrors) {
+        todo!()
+    }
 }
