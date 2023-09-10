@@ -11,7 +11,9 @@ pub struct Secret {
 }
 
 impl Validate for Secret {
-    fn validate(&self, errors: &mut ValidationErrors) {
+    fn validate(&self, _: &mut ValidationErrors) {
+        // Nothing to validate
+        // Not interested in validating the existence of files on host
         ()
     }
 }
