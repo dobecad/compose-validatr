@@ -113,6 +113,17 @@ impl Validate for Build {
             }
             _ => (),
         }
+
+        match self {
+            Build::Map(details) => {
+                if details.dockerfile_inline.is_some() && details.dockerfile.is_some() {
+                    errors.add_error(ValidationError::InvalidValue(
+                        "Cannot specify a Dockerfile and an inline Dockerfile".to_string(),
+                    ))
+                }
+            }
+            _ => (),
+        }
         ()
     }
 }
