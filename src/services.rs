@@ -8,7 +8,8 @@ mod ports;
 mod secrets;
 mod volumes;
 
-use crate::compose::Compose;
+use crate::{compose::Compose, errors::ValidationError};
+use regex::Regex;
 use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
@@ -302,20 +303,29 @@ impl Service {
         // configs must exist in top level configs
 
         self.configs.as_ref().map(|c| {
-            c.iter().all(|config| {
-                match config {
-                    Config::Short(c) => ctx
-                        .configs
-                        .as_ref()
-                        .map(|configs| configs.contains_key(c))
-                        .is_some(),
-                    Config::Long(c) => ctx
-                        .configs
-                        .as_ref()
-                        .map(|configs| configs.contains_key(&c.source))
-                        .is_some(),
-                }
+            c.iter().all(|config| match config {
+                Config::Short(c) => ctx
+                    .configs
+                    .as_ref()
+                    .map(|configs| configs.contains_key(c))
+                    .is_some(),
+                Config::Long(c) => ctx
+                    .configs
+                    .as_ref()
+                    .map(|configs| configs.contains_key(&c.source))
+                    .is_some(),
             })
+        });
+    }
+
+    fn validate_container_name(&self, ctx: &Compose, errors: &mut ValidationErrors) {
+        let re = Regex::new(r"^[a-zA-Z0-9][a-zA-Z0-9_.-]+$").unwrap();
+        self.container_name.as_ref().map(|c| {
+            if !re.is_match(c) {
+                errors.add_error(ValidationError::InvalidValue(
+                    "Invalid container name".to_string(),
+                ));
+            }
         });
     }
 }
@@ -332,6 +342,7 @@ impl Validate for Service {
         self.validate_secrets(ctx, errors);
         self.validate_volumes(ctx, errors);
         self.validate_configs(ctx, errors);
+        self.validate_container_name(ctx, errors);
     }
 }
 
