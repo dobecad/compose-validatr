@@ -34,7 +34,7 @@ pub struct Service {
     pub cgroup: Option<Cgroup>,
     pub cgroup_parent: Option<String>,
     pub command: Option<Command>,
-    pub configs: Option<Vec<String>>, // needs to exist in config top level
+    pub configs: Option<Vec<Config>>, // needs to exist in config top level
     pub container_name: Option<String>,
     pub credential_spec: Option<CredentialSpec>, // file, registry, config
     pub depends_on: Option<DependsOn>,           // existing service
@@ -114,6 +114,22 @@ pub enum Labels {
 pub enum Tmpfs {
     String(String),
     List(Vec<String>),
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(untagged)]
+pub enum Config {
+    Short(String),
+    Long(ConfigDetails),
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ConfigDetails {
+    pub source: String,
+    pub target: String,
+    pub uid: String,
+    pub gid: String,
+    pub mode: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -284,12 +300,21 @@ impl Service {
 
     fn validate_configs(&self, ctx: &Compose, errors: &mut ValidationErrors) {
         // configs must exist in top level configs
+
         self.configs.as_ref().map(|c| {
             c.iter().all(|config| {
-                ctx.configs
-                    .as_ref()
-                    .map(|configs| configs.contains_key(config))
-                    .is_some()
+                match config {
+                    Config::Short(c) => ctx
+                        .configs
+                        .as_ref()
+                        .map(|configs| configs.contains_key(c))
+                        .is_some(),
+                    Config::Long(c) => ctx
+                        .configs
+                        .as_ref()
+                        .map(|configs| configs.contains_key(&c.source))
+                        .is_some(),
+                }
             })
         });
     }
