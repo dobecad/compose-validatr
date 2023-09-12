@@ -11,7 +11,7 @@ mod volumes;
 use crate::compose::Compose;
 use std::collections::HashMap;
 
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 use crate::{compose::Validate, errors::ValidationErrors};
 
@@ -29,8 +29,8 @@ pub struct Service {
     pub cpu_rt_period: Option<String>,
     pub cpus: Option<f32>, // deprecated
     pub cpuset: Option<u8>,
-    pub cap_add: Option<Vec<String>>, // TODO: define capabilities enum
-    pub cap_drop: Option<Vec<String>>,
+    pub cap_add: Option<Vec<Capabilities>>,
+    pub cap_drop: Option<Vec<Capabilities>>,
     pub cgroup: Option<Cgroup>, // define cgroup enum (host, private)
     pub cgroup_parent: Option<String>,
     pub command: Option<Command>,
@@ -194,6 +194,53 @@ pub struct Ulimits {
 pub struct Nofile {
     pub soft: u16,
     pub hard: u16,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum Capabilities {
+    All,
+    AuditControl,
+    AuditRead,
+    AuditWrite,
+    BlockSuspend,
+    Bpf,
+    CheckpointRestore,
+    Chown,
+    DacOverride,
+    DacReadSearch,
+    Fowner,
+    Fsetid,
+    IpcLock,
+    IpcOwner,
+    Kill,
+    Lease,
+    LinuxImmutable,
+    MacAdmin,
+    MacOverride,
+    Mknod,
+    NetAdmin,
+    NetBindService,
+    NetBroadcast,
+    NetRaw,
+    Perfmon,
+    Setgid,
+    Setfcap,
+    Setpcap,
+    Setuid,
+    SysAdmin,
+    SysBoot,
+    SysChroot,
+    SysModule,
+    SysNice,
+    SysPacct,
+    SysPtrace,
+    SysRawio,
+    SysResource,
+    SysTime,
+    SysTtyConfig,
+    Syslog,
+    WakeAlarm,
 }
 
 impl Service {
