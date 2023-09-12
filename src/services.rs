@@ -31,7 +31,7 @@ pub struct Service {
     pub cpuset: Option<u8>,
     pub cap_add: Option<Vec<Capabilities>>,
     pub cap_drop: Option<Vec<Capabilities>>,
-    pub cgroup: Option<Cgroup>, // define cgroup enum (host, private)
+    pub cgroup: Option<Cgroup>,
     pub cgroup_parent: Option<String>,
     pub command: Option<Command>,
     pub configs: Option<Vec<String>>, // needs to exist in config top level
@@ -281,6 +281,18 @@ impl Service {
             .as_ref()
             .map(|v| v.iter().for_each(|volume| volume.validate(ctx, errors)));
     }
+
+    fn validate_configs(&self, ctx: &Compose, errors: &mut ValidationErrors) {
+        // configs must exist in top level configs
+        self.configs.as_ref().map(|c| {
+            c.iter().all(|config| {
+                ctx.configs
+                    .as_ref()
+                    .map(|configs| configs.contains_key(config))
+                    .is_some()
+            })
+        });
+    }
 }
 
 impl Validate for Service {
@@ -294,6 +306,7 @@ impl Validate for Service {
         self.validate_ports(ctx, errors);
         self.validate_secrets(ctx, errors);
         self.validate_volumes(ctx, errors);
+        self.validate_configs(ctx, errors);
     }
 }
 
