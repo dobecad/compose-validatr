@@ -87,7 +87,7 @@ pub struct RollbackConfig {
     pub failure_action: Option<FailureAction>,
     pub monitor: Option<String>,
     pub max_failure_ration: Option<String>,
-    pub order: Option<String>, // this should be an enum
+    pub order: Option<Order>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -97,7 +97,14 @@ pub struct UpdateConfig {
     pub failure_action: Option<FailureAction>,
     pub monitor: Option<String>,
     pub max_failure_ration: Option<String>,
-    pub order: Option<String>, // this should be an enum
+    pub order: Option<Order>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum Order {
+    StopFirst,
+    StartFirst,
 }
 
 #[derive(Debug, Deserialize)]
@@ -108,7 +115,8 @@ pub enum FailureAction {
 }
 
 impl Validate for Deploy {
-    fn validate(&self, ctx: &Compose, errors: &mut crate::errors::ValidationErrors) {
-        todo!()
+    fn validate(&self, _: &Compose, _: &mut crate::errors::ValidationErrors) {
+        // Nothing to really validate here
+        ()
     }
 }
