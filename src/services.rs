@@ -379,6 +379,17 @@ impl Service {
             })
         });
     }
+
+    fn validate_extends(&self, ctx: &Compose, errors: &mut ValidationErrors) {
+        self.extends.as_ref().map(|e| {
+            let result = ctx.services.contains_key(&e.service);
+            if !result {
+                errors.add_error(ValidationError::InvalidValue(
+                    "Extends references invalid service".to_string(),
+                ));
+            }
+        });
+    }
 }
 
 impl Validate for Service {
@@ -397,6 +408,7 @@ impl Validate for Service {
         self.validate_credential_spec(ctx, errors);
         self.validate_depends_on(ctx, errors);
         self.validate_expose(ctx, errors);
+        self.validate_extends(ctx, errors);
     }
 }
 
