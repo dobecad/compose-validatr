@@ -35,14 +35,14 @@ pub struct Service {
     pub cgroup: Option<Cgroup>,
     pub cgroup_parent: Option<String>,
     pub command: Option<Command>,
-    pub configs: Option<Vec<Config>>, // needs to exist in config top level
+    pub configs: Option<Vec<Config>>,
     pub container_name: Option<String>,
-    pub credential_spec: Option<CredentialSpec>, // file, registry, config
-    pub depends_on: Option<DependsOn>,           // existing service
+    pub credential_spec: Option<CredentialSpec>,
+    pub depends_on: Option<DependsOn>,
     pub deploy: Option<deploy::Deploy>,
     pub device_cgroup_rules: Option<Vec<String>>,
     pub devices: Option<Vec<String>>,
-    pub dns: Option<Labels>,
+    pub dns: Option<Labels>, // TODO: maybe validate as ipv4
     pub dns_opt: Option<Vec<String>>,
     pub dns_search: Option<Labels>,
     pub domainname: Option<String>,
@@ -318,6 +318,24 @@ impl Service {
         });
     }
 
+    fn validate_credential_spec(&self, ctx: &Compose, errors: &mut ValidationErrors) {
+        self.credential_spec.as_ref().map(|c| {
+            let result = c.config.as_ref().map(|cred| {
+                ctx.configs
+                    .as_ref()
+                    .map(|configs| configs.contains_key(cred))
+                    .is_some()
+            });
+            result.map(|r| {
+                if !r {
+                    errors.add_error(ValidationError::InvalidValue(
+                        "Credential Spec references unknown config".to_string(),
+                    ))
+                }
+            });
+        });
+    }
+
     fn validate_container_name(&self, ctx: &Compose, errors: &mut ValidationErrors) {
         let re = Regex::new(r"^[a-zA-Z0-9][a-zA-Z0-9_.-]+$").unwrap();
         self.container_name.as_ref().map(|c| {
@@ -326,6 +344,39 @@ impl Service {
                     "Invalid container name".to_string(),
                 ));
             }
+        });
+    }
+
+    fn validate_depends_on(&self, ctx: &Compose, errors: &mut ValidationErrors) {
+        self.depends_on.as_ref().map(|d| match d {
+            DependsOn::List(service) => {
+                let result = service.iter().any(|s| ctx.services.contains_key(s));
+                if !result {
+                    errors.add_error(ValidationError::InvalidValue(
+                        "Invalid service for depends_on".to_string(),
+                    ));
+                }
+            }
+            DependsOn::Map(service) => {
+                let result = service.iter().any(|s| ctx.services.contains_key(s.0));
+                if !result {
+                    errors.add_error(ValidationError::InvalidValue(
+                        "Invalid service for depnds_on".to_string(),
+                    ));
+                }
+            }
+        });
+    }
+
+    fn validate_expose(&self, _: &Compose, errors: &mut ValidationErrors) {
+        self.expose.as_ref().map(|e| {
+            e.iter().all(|port| match port.parse::<u16>() {
+                Err(_) => {
+                    errors.add_error(ValidationError::InvalidValue("Invalid port".to_string()));
+                    false
+                }
+                _ => true,
+            })
         });
     }
 }
@@ -343,6 +394,9 @@ impl Validate for Service {
         self.validate_volumes(ctx, errors);
         self.validate_configs(ctx, errors);
         self.validate_container_name(ctx, errors);
+        self.validate_credential_spec(ctx, errors);
+        self.validate_depends_on(ctx, errors);
+        self.validate_expose(ctx, errors);
     }
 }
 
