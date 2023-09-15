@@ -383,7 +383,45 @@ impl Service {
     fn validate_extends(&self, ctx: &Compose, errors: &mut ValidationErrors) {
         self.extends.as_ref().map(|e| {
             let result = ctx.services.contains_key(&e.service);
-            if !result {
+            if result {
+                // Services that have dependencies on other services cannot be used as a base.
+                // Therefore, any key that introduces a dependency on another service is incompatible
+                // with extends. The non-exhaustive list of such keys is: links, volumes_from, container
+                // mode (in ipc, pid, network_mode and net), service mode (in ipc, pid and network_mode), depends_on.
+                let service = ctx.services.get(&e.service).unwrap();
+                service.depends_on.as_ref().map(|d| {
+                    errors.add_error(ValidationError::InvalidValue(
+                        "Extends cannot extend another service that has a depends_on".to_string(),
+                    ))
+                });
+                service.links.as_ref().map(|l| {
+                    if l.len() > 0 {
+                        errors.add_error(ValidationError::InvalidValue(
+                            "Extends cannot have any links".to_string(),
+                        ))
+                    }
+                });
+                service.volumes_from.as_ref().map(|v| {
+                    if v.len() > 0 {
+                        errors.add_error(ValidationError::InvalidValue(
+                            "Extends canot have any volumes_from".to_string(),
+                        ))
+                    }
+                });
+                service.ipc.as_ref().map(|i| {
+                    errors.add_error(ValidationError::InvalidValue(
+                        "Extends cannot have an IPC mode".to_string(),
+                    ))
+                });
+                service.network_mode.as_ref().map(|n| {
+                    if n.starts_with("service:") {
+                        errors.add_error(ValidationError::InvalidValue(
+                            "Extends cannot extend a service that has a network dependency"
+                                .to_string(),
+                        ))
+                    }
+                });
+            } else {
                 errors.add_error(ValidationError::InvalidValue(
                     "Extends references invalid service".to_string(),
                 ));
