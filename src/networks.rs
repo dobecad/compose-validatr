@@ -49,7 +49,7 @@ pub struct Config {
 }
 
 impl Validate for Network {
-    fn validate(&self, ctx: &Compose, errors: &mut ValidationErrors) {
+    fn validate(&self, _: &Compose, errors: &mut ValidationErrors) {
         if let Some(config) = &self.config {
             for c in config {
                 if let Some(subnet) = &c.subnet {

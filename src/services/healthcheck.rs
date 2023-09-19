@@ -20,7 +20,7 @@ pub enum Test {
 }
 
 impl Validate for HealthCheck {
-    fn validate(&self, ctx: &Compose, errors: &mut crate::errors::ValidationErrors) {
-        todo!()
+    fn validate(&self, _: &Compose, _: &mut crate::errors::ValidationErrors) {
+        ()
     }
 }

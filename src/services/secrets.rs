@@ -21,7 +21,7 @@ pub struct SecretOptions {
 }
 
 impl Validate for Secrets {
-    fn validate(&self, ctx: &Compose, errors: &mut crate::errors::ValidationErrors) {
-        todo!()
+    fn validate(&self, _: &Compose, _: &mut crate::errors::ValidationErrors) {
+        ()
     }
 }

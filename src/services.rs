@@ -336,7 +336,7 @@ impl Service {
         });
     }
 
-    fn validate_container_name(&self, ctx: &Compose, errors: &mut ValidationErrors) {
+    fn validate_container_name(&self, _: &Compose, errors: &mut ValidationErrors) {
         let re = Regex::new(r"^[a-zA-Z0-9][a-zA-Z0-9_.-]+$").unwrap();
         self.container_name.as_ref().map(|c| {
             if !re.is_match(c) {
@@ -389,7 +389,7 @@ impl Service {
                 // with extends. The non-exhaustive list of such keys is: links, volumes_from, container
                 // mode (in ipc, pid, network_mode and net), service mode (in ipc, pid and network_mode), depends_on.
                 let service = ctx.services.get(&e.service).unwrap();
-                service.depends_on.as_ref().map(|d| {
+                service.depends_on.as_ref().map(|_| {
                     errors.add_error(ValidationError::InvalidValue(
                         "Extends cannot extend another service that has a depends_on".to_string(),
                     ))
@@ -408,7 +408,7 @@ impl Service {
                         ))
                     }
                 });
-                service.ipc.as_ref().map(|i| {
+                service.ipc.as_ref().map(|_| {
                     errors.add_error(ValidationError::InvalidValue(
                         "Extends cannot have an IPC mode".to_string(),
                     ))
