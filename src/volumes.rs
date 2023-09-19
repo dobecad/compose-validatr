@@ -23,7 +23,7 @@ pub struct DriverOpts {
 }
 
 impl Validate for Volume {
-    fn validate(&self, ctx: &Compose, _: &mut ValidationErrors) {
+    fn validate(&self, _: &Compose, _: &mut ValidationErrors) {
         // Nothing to really validate here
         // Not too interested in validating the existence of drivers on the host
         ()
