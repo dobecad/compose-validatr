@@ -44,6 +44,9 @@ impl Compose {
                     Self::validate_secrets(&c, secrets, &mut errors);
                 };
                 Self::validate_services(&c, &c.services, &mut errors);
+                if errors.has_errors() {
+                  return Err(errors)
+                }
                 Ok(c)
             }
             Err(err) => {
