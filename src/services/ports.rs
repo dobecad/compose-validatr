@@ -31,7 +31,7 @@ pub enum Mode {
 }
 
 impl Validate for Ports {
-    fn validate(&self, ctx: &Compose, errors: &mut crate::errors::ValidationErrors) {
-        todo!()
+    fn validate(&self, _: &Compose, _: &mut crate::errors::ValidationErrors) {
+        ()
     }
 }
