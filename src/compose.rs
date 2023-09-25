@@ -45,7 +45,7 @@ impl Compose {
                 };
                 Self::validate_services(&c, &c.services, &mut errors);
                 if errors.has_errors() {
-                  return Err(errors)
+                    return Err(errors);
                 }
                 Ok(c)
             }

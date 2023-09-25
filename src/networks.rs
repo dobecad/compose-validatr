@@ -120,4 +120,35 @@ mod tests {
         );
         assert_eq!(networks.options.unwrap().len(), 2);
     }
+
+    #[test]
+    fn test_invalid_ip() {
+        let yaml = r#"
+        services:
+          gitlab:
+            image: gitlab/gitlab-ce:latest
+            container_name: gitlab
+            hostname: gitlab
+            restart: always
+        networks:
+          hello:
+            ipam:
+            driver: default
+            config:
+            - subnet: Invalid Ip
+              ip_range: 172.28.5.0/24
+              gateway: 172.28.5.254
+              aux_addresses:
+                host1: 172.28.1.5
+                host2: 172.28.1.6
+                host3: 172.28.1.7
+            options:
+              foo: bar
+              baz: "0"
+        "#;
+
+        let compose = Compose::new(yaml);
+        assert!(compose.is_err());
+        assert!(compose.is_err_and(|e| e.all_errors().len() == 1))
+    }
 }
