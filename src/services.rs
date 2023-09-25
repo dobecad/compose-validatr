@@ -361,7 +361,7 @@ impl Service {
                 let result = service.iter().any(|s| ctx.services.contains_key(s.0));
                 if !result {
                     errors.add_error(ValidationError::InvalidValue(
-                        "Invalid service for depnds_on".to_string(),
+                        "Invalid service for depends_on".to_string(),
                     ));
                 }
             }
