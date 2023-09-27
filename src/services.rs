@@ -471,4 +471,26 @@ mod tests {
         assert!(compose.is_err());
         assert!(compose.is_err_and(|e| e.all_errors().len() == 1));
     }
+
+    #[test]
+    fn depends_on_valid_service() {
+        let yaml = r#"
+        services:
+          gitlab:
+            image: gitlab/gitlab-ce:latest
+            container_name: gitlab
+            hostname: gitlab
+            restart: always
+            depends_on:
+              - hello_world
+          hello_world:
+            image: gitlab/gitlab-ce:latest
+            container_name: gitlab
+            hostname: gitlab
+            restart: always
+        "#;
+
+        let compose = Compose::new(yaml);
+        assert!(compose.is_ok());
+    }
 }
