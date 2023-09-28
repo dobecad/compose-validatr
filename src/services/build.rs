@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, fmt::DebugTuple};
 
 use serde::Deserialize;
 
@@ -70,6 +70,7 @@ pub enum ShmSize {
 }
 
 #[derive(Debug, Deserialize)]
+#[serde(untagged)]
 pub enum BuildSecret {
     Short(String),
     Long(SecretDetails),
@@ -89,26 +90,29 @@ impl Validate for Build {
         // Check that specified secrets exist
         match self {
             Build::Map(details) => {
-                let results = details.secrets.as_ref().map(|s| {
-                    s.iter().all(|secret| match secret {
-                        BuildSecret::Short(short) => ctx
-                            .secrets
-                            .as_ref()
-                            .map(|x| x.contains_key(short))
-                            .is_some(),
-                        BuildSecret::Long(details) => ctx
-                            .secrets
-                            .as_ref()
-                            .map(|x| x.contains_key(&details.source))
-                            .is_some(),
+                details.secrets.as_ref().map(|s| {
+                    s.iter().for_each(|secret| match secret {
+                        BuildSecret::Short(short) => {
+                            ctx.secrets.as_ref().map(|x| {
+                                if !x.contains_key(short) {
+                                    errors.add_error(ValidationError::InvalidValue(format!(
+                                        "Secret is not defined: {}",
+                                        short
+                                    )))
+                                }
+                            });
+                        }
+                        BuildSecret::Long(details) => {
+                            ctx.secrets.as_ref().map(|x| {
+                                if !x.contains_key(&details.source) {
+                                    errors.add_error(ValidationError::InvalidValue(format!(
+                                        "Secret is not defined: {}",
+                                        details.source
+                                    )))
+                                }
+                            });
+                        }
                     })
-                });
-                results.as_ref().map(|r| {
-                    if !r {
-                        errors.add_error(ValidationError::InvalidValue(
-                            "Build definition secret is not defined".to_string(),
-                        ));
-                    }
                 });
             }
             _ => (),
@@ -125,5 +129,96 @@ impl Validate for Build {
             _ => (),
         }
         ()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_valid_build() {
+        let yaml = r#"
+        services:
+          gitlab:
+            image: gitlab/gitlab-ce:latest
+            container_name: gitlab
+            hostname: gitlab
+            restart: always
+            build:
+              context: .
+              dockerfile: webapp.Dockerfile
+        "#;
+
+        let compose = Compose::new(yaml);
+        assert!(compose.is_ok())
+    }
+
+    #[test]
+    fn test_invalid_build_inline() {
+        let yaml = r#"
+        services:
+          gitlab:
+            image: gitlab/gitlab-ce:latest
+            container_name: gitlab
+            hostname: gitlab
+            restart: always
+            build:
+              context: .
+              dockerfile: webapp.Dockerfile
+              dockerfile_inline: |
+                FROM baseimage
+                RUN some command
+        "#;
+
+        let compose = Compose::new(yaml);
+        assert!(compose.is_err());
+        assert!(compose.is_err_and(|e| e.all_errors().len() == 1));
+    }
+
+    #[test]
+    fn test_valid_secret_reference() {
+        let yaml = r#"
+        services:
+          gitlab:
+            image: gitlab/gitlab-ce:latest
+            container_name: gitlab
+            hostname: gitlab
+            restart: always
+            build:
+              context: .
+              dockerfile: webapp.Dockerfile
+              secrets:
+                - server-certificate
+        secrets:
+          server-certificate:
+            file: ./server.cert
+        "#;
+
+        let compose = Compose::new(yaml);
+        assert!(compose.is_ok());
+    }
+
+    #[test]
+    fn test_invalid_secret_reference() {
+        let yaml = r#"
+        services:
+          gitlab:
+            image: gitlab/gitlab-ce:latest
+            container_name: gitlab
+            hostname: gitlab
+            restart: always
+            build:
+              context: .
+              dockerfile: webapp.Dockerfile
+              secrets:
+                - server-certificate
+        secrets:
+          hello-world:
+            file: ./server.cert
+        "#;
+
+        let compose = Compose::new(yaml);
+        assert!(compose.is_err());
     }
 }
