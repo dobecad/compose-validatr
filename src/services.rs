@@ -303,17 +303,27 @@ impl Service {
         // configs must exist in top level configs
 
         self.configs.as_ref().map(|c| {
-            c.iter().all(|config| match config {
-                Config::Short(c) => ctx
-                    .configs
-                    .as_ref()
-                    .map(|configs| configs.contains_key(c))
-                    .is_some(),
-                Config::Long(c) => ctx
-                    .configs
-                    .as_ref()
-                    .map(|configs| configs.contains_key(&c.source))
-                    .is_some(),
+            c.iter().for_each(|config| match config {
+                Config::Short(c) => {
+                    ctx.configs.as_ref().map(|configs| {
+                        if !configs.contains_key(c) {
+                            errors.add_error(ValidationError::InvalidValue(format!(
+                                "Config is not defined: {}",
+                                c
+                            )))
+                        }
+                    });
+                }
+                Config::Long(c) => {
+                    ctx.configs.as_ref().map(|configs| {
+                        if !configs.contains_key(&c.source) {
+                            errors.add_error(ValidationError::InvalidValue(format!(
+                                "Config is not defined: {}",
+                                &c.source
+                            )))
+                        }
+                    });
+                }
             })
         });
     }
@@ -492,5 +502,52 @@ mod tests {
 
         let compose = Compose::new(yaml);
         assert!(compose.is_ok());
+    }
+
+    #[test]
+    fn valid_config() {
+        let yaml = r#"
+        services:
+          gitlab:
+            image: gitlab/gitlab-ce:latest
+            container_name: gitlab
+            hostname: gitlab
+            restart: always
+            configs:
+              - my_config
+              - my_other_config
+        configs:
+          my_config:
+            file: ./my_config.txt  
+          my_other_config:
+            external: true
+        "#;
+
+        let compose = Compose::new(yaml);
+        assert!(compose.is_ok());
+    }
+
+    #[test]
+    fn invalid_config() {
+        let yaml = r#"
+        services:
+          gitlab:
+            image: gitlab/gitlab-ce:latest
+            container_name: gitlab
+            hostname: gitlab
+            restart: always
+            configs:
+              - hello
+              - world
+        configs:
+          my_config:
+            file: ./my_config.txt  
+          my_other_config:
+            external: true
+        "#;
+
+        let compose = Compose::new(yaml);
+        dbg!(&compose);
+        assert!(compose.is_err());
     }
 }
