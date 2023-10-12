@@ -1,17 +1,17 @@
 use std::collections::HashMap;
 
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 use crate::compose::{Compose, Validate};
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum Networks {
     List(Vec<String>),
     Map(HashMap<String, NetworkOptions>),
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct NetworkOptions {
     pub aliases: Option<Vec<String>>,
     pub ipv4_address: Option<String>,

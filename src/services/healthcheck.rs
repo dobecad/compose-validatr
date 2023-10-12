@@ -1,8 +1,8 @@
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 use crate::compose::{Compose, Validate};
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct HealthCheck {
     pub test: Option<Test>,
     pub interval: Option<String>,
@@ -13,7 +13,7 @@ pub struct HealthCheck {
     pub disable: Option<bool>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub enum Test {
     String(String),
     List(Vec<String>),

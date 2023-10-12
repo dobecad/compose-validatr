@@ -10,10 +10,10 @@ use crate::{
 };
 
 use super::{configs, networks, secrets, services, volumes};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use serde_yaml;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct Compose {
     pub version: Option<String>,
     pub services: HashMap<String, services::Service>,

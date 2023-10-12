@@ -1,9 +1,9 @@
 use crate::compose::Compose;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 use crate::{compose::Validate, errors::ValidationErrors};
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct Config {
     pub file: Option<String>,
     pub external: Option<bool>,

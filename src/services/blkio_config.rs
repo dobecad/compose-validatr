@@ -1,8 +1,8 @@
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 use crate::compose::{Compose, Validate};
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct BlkioConfig {
     pub weight: u16,
     pub weight_device: Option<Vec<WeightDevice>>,
@@ -12,37 +12,37 @@ pub struct BlkioConfig {
     pub device_write_iops: Option<Vec<DeviceWriteIops>>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct WeightDevice {
     pub path: String,
     pub weight: u16,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct DeviceReadBps {
     pub path: String,
     pub rate: Rate,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct DeviceWriteBps {
     pub path: String,
     pub rate: Rate,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct DeviceReadIops {
     pub path: String,
     pub rate: Rate,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct DeviceWriteIops {
     pub path: String,
     pub rate: Rate,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub enum Rate {
     String(String),
     Bytes(u64),

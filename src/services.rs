@@ -16,7 +16,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{compose::Validate, errors::ValidationErrors};
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct Service {
     pub attach: Option<bool>,
     pub build: Option<build::Build>,
@@ -103,28 +103,28 @@ pub struct Service {
     pub working_dir: Option<String>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum Labels {
     List(Vec<String>),
     Map(HashMap<String, String>),
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum Tmpfs {
     String(String),
     List(Vec<String>),
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum Config {
     Short(String),
     Long(ConfigDetails),
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct ConfigDetails {
     pub source: String,
     pub target: String,
@@ -133,42 +133,42 @@ pub struct ConfigDetails {
     pub mode: String,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
 pub enum Cgroup {
     Host,
     Private,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum Command {
     String(String),
     List(Vec<String>),
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct CredentialSpec {
     pub file: Option<String>,
     pub registry: Option<String>,
     pub config: Option<String>, // must be valid config
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum DependsOn {
     List(Vec<String>), // must be valid services
     Map(HashMap<String, DependsOnDetail>),
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct DependsOnDetail {
     pub restart: Option<bool>,
     pub condition: Option<DependsOnCondition>,
     pub required: Option<bool>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum DependsOnCondition {
     ServiceStarted,
@@ -176,14 +176,14 @@ pub enum DependsOnCondition {
     ServiceCompletedSuccessfully,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct Extends {
     // https://docs.docker.com/compose/compose-file/05-services/#extends
     pub file: String,
     pub service: String,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
 pub enum PullPolicy {
     Always,
@@ -192,7 +192,7 @@ pub enum PullPolicy {
     Build,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
 pub enum Restart {
     No,
@@ -201,13 +201,13 @@ pub enum Restart {
     UnlessStopped,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct Ulimits {
     pub nproc: u16,
     pub nofile: Nofile,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct Nofile {
     pub soft: u16,
     pub hard: u16,
