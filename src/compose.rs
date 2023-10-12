@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, fmt::Display};
 
 use crate::{
     configs::Config,
@@ -122,6 +122,12 @@ pub(crate) trait Validate {
     /// Push all validation errors to the ValidationErrors so that users are able to see
     /// all of their errors at once, versus incrementally
     fn validate(&self, ctx: &Compose, errors: &mut ValidationErrors);
+}
+
+impl Display for Compose {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", serde_yaml::to_string(&self).unwrap())
+    }
 }
 
 #[cfg(test)]
