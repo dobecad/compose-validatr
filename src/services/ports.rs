@@ -2,14 +2,14 @@ use serde::{Deserialize, Serialize};
 
 use crate::compose::{Compose, Validate};
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum Ports {
     Short(Vec<String>),
     Long(Vec<PortOptions>),
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct PortOptions {
     pub target: u16,
     pub host_ip: String,
@@ -18,13 +18,13 @@ pub struct PortOptions {
     pub mode: Mode,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub enum Protocol {
     Udp,
     Tcp,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub enum Mode {
     Host,
     Ingress,

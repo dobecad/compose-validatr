@@ -7,7 +7,7 @@ use crate::{
     errors::ValidationError,
 };
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum Build {
     String(String),
@@ -16,7 +16,7 @@ pub enum Build {
     Map(BuildDetails),
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct BuildDetails {
     pub context: Option<String>,
     pub dockerfile: Option<String>,
@@ -39,44 +39,44 @@ pub struct BuildDetails {
     pub platforms: Option<Vec<String>>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub enum BuildArgs {
     List(Vec<String>),
     Map(HashMap<String, String>),
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub enum SshArgs {
     List(Vec<String>),
     Map(HashMap<String, String>),
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub enum AdditionalContexts {
     List(Vec<String>),
     Map(HashMap<String, String>),
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub enum Labels {
     List(Vec<String>),
     Map(HashMap<String, String>),
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub enum ShmSize {
     String(String),
     Bytes(u64),
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum BuildSecret {
     Short(String),
     Long(SecretDetails),
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct SecretDetails {
     pub source: String,
     pub target: String,

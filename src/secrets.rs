@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{compose::Validate, errors::ValidationErrors};
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Secret {
     pub file: Option<String>,
     pub environment: Option<String>,

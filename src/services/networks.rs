@@ -4,14 +4,14 @@ use serde::{Deserialize, Serialize};
 
 use crate::compose::{Compose, Validate};
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum Networks {
     List(Vec<String>),
     Map(HashMap<String, NetworkOptions>),
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct NetworkOptions {
     pub aliases: Option<Vec<String>>,
     pub ipv4_address: Option<String>,

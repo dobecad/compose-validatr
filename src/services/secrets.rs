@@ -4,14 +4,14 @@ use serde::{Deserialize, Serialize};
 
 use crate::compose::{Compose, Validate};
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum Secrets {
     Short(Vec<String>),
     Long(HashMap<String, SecretOptions>),
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct SecretOptions {
     pub source: String,
     pub target: String,

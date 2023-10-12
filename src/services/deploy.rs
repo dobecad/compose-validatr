@@ -3,7 +3,7 @@ use crate::compose::{Compose, Validate};
 use super::Labels;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Deploy {
     pub replicas: Option<u16>,
     pub enpoint_mode: Option<EndpointMode>,
@@ -16,33 +16,33 @@ pub struct Deploy {
     pub update_config: Option<UpdateConfig>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Placement {
     pub constraints: Option<Labels>,
     pub preferences: Option<Labels>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
 pub enum EndpointMode {
     Vip,
     Dnsrr,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
 pub enum Mode {
     Global,
     Replicated,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Resources {
     pub limits: Option<Limits>,
     pub reservations: Option<Reservations>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Limits {
     pub cpus: Option<String>,
     pub memory: Option<String>,
@@ -51,14 +51,14 @@ pub struct Limits {
     pub capabilities: Option<Vec<DriverCapabilities>>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
 pub enum DriverCapabilities {
     Gpu,
     Tpu,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct RestartPolicy {
     pub condition: Option<RestartCondition>,
     pub delay: Option<String>,
@@ -66,7 +66,7 @@ pub struct RestartPolicy {
     pub window: Option<String>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum RestartCondition {
     None,
@@ -74,13 +74,13 @@ pub enum RestartCondition {
     Any,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Reservations {
     pub cpus: String,
     pub memory: String,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct RollbackConfig {
     pub parallelism: Option<u8>,
     pub delay: Option<String>,
@@ -90,7 +90,7 @@ pub struct RollbackConfig {
     pub order: Option<Order>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct UpdateConfig {
     pub parallelism: Option<u8>,
     pub delay: Option<String>,
@@ -100,14 +100,14 @@ pub struct UpdateConfig {
     pub order: Option<Order>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum Order {
     StopFirst,
     StartFirst,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
 pub enum FailureAction {
     Continue,

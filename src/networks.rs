@@ -9,7 +9,7 @@ use crate::{
     services::Labels,
 };
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Network {
     pub attachable: Option<bool>,
     pub ipam: Option<Ipam>,
@@ -24,14 +24,14 @@ pub struct Network {
     pub options: Option<HashMap<String, String>>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Ipam {
     pub driver: Option<Driver>,
     pub config: Option<Config>,
     pub options: Option<HashMap<String, String>>,
 }
 
-#[derive(Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
 pub enum Driver {
     None,
@@ -40,7 +40,7 @@ pub enum Driver {
     Bridge,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Config {
     pub subnet: Option<String>,
     pub ip_range: Option<String>,

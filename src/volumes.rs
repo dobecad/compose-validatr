@@ -5,7 +5,7 @@ use crate::compose::Validate;
 use crate::errors::ValidationErrors;
 use crate::services::Labels;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Volume {
     pub driver: Option<String>,
     pub driver_opts: Option<DriverOpts>,
@@ -14,7 +14,7 @@ pub struct Volume {
     pub name: Option<String>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct DriverOpts {
     #[serde(rename = "type")]
     pub driver_type: Option<String>,

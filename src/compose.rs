@@ -13,7 +13,7 @@ use super::{configs, networks, secrets, services, volumes};
 use serde::{Deserialize, Serialize};
 use serde_yaml;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Compose {
     pub version: Option<String>,
     pub services: HashMap<String, services::Service>,
