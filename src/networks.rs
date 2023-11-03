@@ -73,7 +73,7 @@ impl Validate for Network {
                 if let Some(gateway) = &c.gateway {
                     match gateway.parse::<IpNetwork>() {
                         Err(e) => errors.add_error(ValidationError::InvalidValue(format!(
-                            "Invalid ip_range address: {}",
+                            "Invalid gateway address: {}",
                             e
                         ))),
                         _ => (),
