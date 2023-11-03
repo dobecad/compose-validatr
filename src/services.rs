@@ -414,7 +414,7 @@ impl Service {
                 service.volumes_from.as_ref().map(|v| {
                     if v.len() > 0 {
                         errors.add_error(ValidationError::InvalidValue(
-                            "Extends canot have any volumes_from".to_string(),
+                            "Extends cannot have any volumes_from".to_string(),
                         ))
                     }
                 });
