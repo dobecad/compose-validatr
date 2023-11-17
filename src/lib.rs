@@ -1,4 +1,4 @@
-//! compose-validatr is a library for validating and building valid Docker Compose manifests that are not dependent on the host system.
+//! `compose-validatr` is a library for validating and building valid manifests that are not dependent on the host system.
 //!
 //! # Table of Contents
 //!
@@ -9,7 +9,8 @@
 //!
 //! # High-level Features
 //!
-//! - Create and validate a Compose structure from &str
+//! - Create and validate a Compose structure from `&str`
+//! - Access the fields for a Compose manifest
 //! - View multiple validation errors at once
 //!  
 //! # Purpose
@@ -146,6 +147,16 @@
 //! }
 //! ```
 
+#![warn(
+    clippy::all,
+    clippy::todo,
+    clippy::empty_enum,
+    clippy::inefficient_to_string,
+    clippy::str_to_string,
+    clippy::str_to_string,
+    clippy::missing_docs
+)]
+#![deny(unreachable_pub, unreachable_code, unsafe_code)]
 pub mod compose;
 pub mod configs;
 pub mod errors;
