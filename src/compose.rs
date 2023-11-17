@@ -13,6 +13,12 @@ use super::{configs, networks, secrets, services, volumes};
 use serde::{Deserialize, Serialize};
 use serde_yaml;
 
+/// Represents an entire [Docker Compose](https://docs.docker.com/compose/compose-file/) manifest
+/// 
+/// All fields other than the `services` field are optional. Optional fields are skipped
+/// from serialization if they are `None`
+/// 
+/// 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Compose {
     #[serde(skip_serializing_if = "Option::is_none")]

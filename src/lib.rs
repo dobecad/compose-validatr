@@ -1,4 +1,4 @@
-//! `compose-validatr` is a library for validating and building valid manifests that are not dependent on the host system.
+//! `compose-validatr` is a library for validating and building valid [Docker Compose](https://docs.docker.com/compose/compose-file/) manifests that are not dependent on the host system.
 //!
 //! # Table of Contents
 //!
@@ -9,7 +9,7 @@
 //!
 //! # High-level Features
 //!
-//! - Create and validate a Compose structure from `&str`
+//! - Create and validate a Docker Compose structure from `&str`
 //! - Access the fields for a Compose manifest
 //! - View multiple validation errors at once
 //!  
@@ -24,7 +24,7 @@
 //!
 //! ```rust
 //! use compose_validatr::Compose;
-//! 
+//!
 //! let yaml = r#"
 //! services:
 //!   gitlab:
