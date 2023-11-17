@@ -223,7 +223,7 @@ pub struct Service {
     pub scale: Option<u32>, // deprecated
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub secrets: Option<secrets::Secrets>,
+    pub secrets: Option<Vec<secrets::Secret>>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub secruity_opt: Option<Vec<String>>,
@@ -468,7 +468,9 @@ impl Service {
     }
 
     fn validate_secrets(&self, ctx: &Compose, errors: &mut ValidationErrors) {
-        self.secrets.as_ref().map(|s| s.validate(ctx, errors));
+        self.secrets
+            .as_ref()
+            .map(|s| s.iter().for_each(|s| s.validate(ctx, errors)));
     }
 
     fn validate_volumes(&self, ctx: &Compose, errors: &mut ValidationErrors) {
