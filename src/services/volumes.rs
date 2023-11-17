@@ -41,6 +41,7 @@ pub struct LongVolumeOptions {
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(rename_all = "lowercase")]
 pub enum VolumeType {
     Volume,
     Bind,
@@ -68,7 +69,91 @@ pub struct Tmpfs {
 }
 
 impl Validate for Volumes {
-    fn validate(&self, _: &Compose, _: &mut crate::errors::ValidationErrors) {
+    /// Note: Currently, this implementation of volumes always assumes references to volumes will
+    /// be named volumes from the top level volumes section. However, the official docs say that
+    /// the services:volumes should also allow for path references. Since this library does not
+    /// care about the host system, maybe there should be additional options to check for host
+    /// references.
+    fn validate(&self, _ctx: &Compose, _errors: &mut crate::errors::ValidationErrors) {
+        // match self {
+        //     Volumes::String(s) => {
+        //         ctx.volumes.as_ref().map(|available_volumes| {
+        //             if !available_volumes.contains_key(s) {
+        //                 errors.add_error(crate::errors::ValidationError::InvalidValue(format!(
+        //                     "Service volumes reference unknown volume: {s}"
+        //                 )));
+        //             }
+        //         });
+        //     }
+        //     Volumes::Short(s) => {
+        //         ctx.volumes.as_ref().map(|available_volumes| {
+        //             if !available_volumes.contains_key(s.volume.as_str()) {
+        //                 errors.add_error(crate::errors::ValidationError::InvalidValue(format!(
+        //                     "Service volumes reference unknown volume: {}",
+        //                     s.volume
+        //                 )));
+        //             }
+        //         });
+        //     }
+        //     Volumes::Long(s) => {
+        //         ctx.volumes.as_ref().map(|available_volumes| {
+        //             if !available_volumes.contains_key(s.source.as_str()) {
+        //                 errors.add_error(crate::errors::ValidationError::InvalidValue(format!(
+        //                     "Service volumes reference unknown volume: {}",
+        //                     s.source
+        //                 )));
+        //             }
+        //         });
+        //     }
+        // }
         ()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn invalid_volume_reference() {
+        let yaml = r#"
+        services:
+          backend:
+            image: example/backend
+            volumes:
+              - type: volume
+                source: db-data
+                target: /data
+                volume:
+                  nocopy: true
+        
+        volumes:
+          hello:
+        "#;
+        let compose = Compose::new(yaml);
+        assert!(compose.is_ok());
+
+        // See above comment about validation
+        // assert!(compose.is_err());
+    }
+
+    #[test]
+    fn valid_volume_reference() {
+        let yaml = r#"
+        services:
+          backend:
+            image: example/backend
+            volumes:
+              - type: volume
+                source: hello
+                target: /data
+                volume:
+                  nocopy: true
+        
+        volumes:
+          hello:
+        "#;
+        let compose = Compose::new(yaml);
+        assert!(compose.is_ok());
     }
 }
