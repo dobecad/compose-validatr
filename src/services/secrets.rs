@@ -21,7 +21,65 @@ pub struct SecretOptions {
 }
 
 impl Validate for Secrets {
-    fn validate(&self, _: &Compose, _: &mut crate::errors::ValidationErrors) {
-        ()
+    fn validate(&self, ctx: &Compose, errors: &mut crate::errors::ValidationErrors) {
+        match self {
+            Secrets::Short(s) => s.iter().for_each(|secret| {
+                ctx.secrets.as_ref().map(|available_secrets| {
+                    if !available_secrets.contains_key(secret) {
+                        errors.add_error(crate::errors::ValidationError::InvalidValue(format!(
+                            "Service secrets reference an unknown secret: {secret}"
+                        )));
+                    }
+                });
+            }),
+            Secrets::Long(s) => s.keys().for_each(|secret| {
+                ctx.secrets.as_ref().map(|available_secrets| {
+                    if !available_secrets.contains_key(secret) {
+                        errors.add_error(crate::errors::ValidationError::InvalidValue(format!(
+                            "Service secrets reference an unknown secret: {secret}"
+                        )));
+                    }
+                });
+            }),
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn missing_secret() {
+        let yaml = r#"
+        services:
+          frontend:
+            image: example/webapp
+            secrets:
+              - server-certificate
+        secrets:
+          helloworld:
+            file: ./server.cert
+          worldhello:
+            file: ./server.cert
+        "#;
+        let compose = Compose::new(yaml);
+        assert!(compose.is_err());
+    }
+
+    #[test]
+    fn valid_secret() {
+        let yaml = r#"
+        services:
+          frontend:
+            image: example/webapp
+            secrets:
+              - helloworld
+        secrets:
+          helloworld:
+            file: ./server.cert
+        "#;
+        let compose = Compose::new(yaml);
+        assert!(compose.is_ok());
     }
 }
