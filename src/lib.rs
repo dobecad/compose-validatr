@@ -24,6 +24,25 @@
 //!
 //! ```rust
 //! use compose_validatr::Compose;
+//! 
+//! let yaml = r#"
+//! services:
+//!   gitlab:
+//!     image: gitlab/gitlab-ce:latest
+//!     container_name: gitlab
+//!     hostname: gitlab
+//!     restart: always
+//!     build:
+//!       context: .
+//!       dockerfile: webapp.Dockerfile
+//! "#;
+//!
+//! let compose = Compose::new(yaml).unwrap();
+//! compose.services.keys().for_each(|service_name| println!("Service: {service_name}"));
+//! ```
+//!
+//! ```rust
+//! use compose_validatr::Compose;
 //!
 //! let yaml = r#"
 //! version: '3.9'
