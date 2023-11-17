@@ -40,7 +40,7 @@ pub struct Compose {
 }
 
 impl Compose {
-    /// Create a new [`Compose`] representation
+    /// Create and validate a [`Compose`] representation
     pub fn new(contents: &str) -> Result<Self, ValidationErrors> {
         let mut errors = ValidationErrors::new();
         let compose: Result<Self, ValidationError> = serde_yaml::from_str(contents)
