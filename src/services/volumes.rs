@@ -23,10 +23,20 @@ pub struct LongVolumeOptions {
     pub volume_type: VolumeType,
     pub source: String,
     pub target: String,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub read_only: Option<bool>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub bind: Option<Bind>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub volume: Option<VolumeOptions>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tmpfs: Option<Tmpfs>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub consistency: Option<String>,
 }
 

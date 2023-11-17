@@ -7,18 +7,31 @@ use crate::services::Labels;
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Volume {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub driver: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub driver_opts: Option<DriverOpts>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub external: Option<bool>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub labels: Option<Labels>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct DriverOpts {
-    #[serde(rename = "type")]
+    #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub driver_type: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub o: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub device: Option<String>,
 }
 

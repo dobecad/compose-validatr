@@ -18,88 +18,253 @@ use crate::{compose::Validate, errors::ValidationErrors};
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Service {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub attach: Option<bool>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub build: Option<build::Build>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub blkio_config: Option<blkio_config::BlkioConfig>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cpu_count: Option<u8>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cpu_percent: Option<f32>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cpu_shares: Option<u32>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cpu_period: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cpu_quota: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cpu_rt_runtime: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cpu_rt_period: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cpus: Option<f32>, // deprecated
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cpuset: Option<u8>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cap_add: Option<Vec<Capabilities>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cap_drop: Option<Vec<Capabilities>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cgroup: Option<Cgroup>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cgroup_parent: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub command: Option<Command>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub configs: Option<Vec<Config>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub container_name: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub credential_spec: Option<CredentialSpec>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub depends_on: Option<DependsOn>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub deploy: Option<deploy::Deploy>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub device_cgroup_rules: Option<Vec<String>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub devices: Option<Vec<String>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub dns: Option<Labels>, // TODO: maybe validate as ipv4
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub dns_opt: Option<Vec<String>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub dns_search: Option<Labels>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub domainname: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub entrypoint: Option<Labels>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub env_file: Option<Labels>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub environment: Option<Labels>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub expose: Option<Vec<String>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub extends: Option<Extends>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub annotations: Option<Labels>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub external_links: Option<Vec<String>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub extra_hosts: Option<Labels>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub group_add: Option<Vec<String>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub healthcheck: Option<healthcheck::HealthCheck>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub hostname: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub image: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub init: Option<bool>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ipc: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub uts: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub isolation: Option<String>, // TODO: Verify this
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub labels: Option<Labels>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub links: Option<Vec<String>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub logging: Option<logging::Logging>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub network_mode: Option<String>, // TODO: Maybe make enum for this?
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub networks: Option<networks::Networks>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub mac_address: Option<String>,
-    pub mem_limit: Option<String>,       // deprecated
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub mem_limit: Option<String>, // deprecated
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub mem_reservation: Option<String>, // deprecated
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub mem_swappiness: Option<u8>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub memswap_limit: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub oom_kill_disable: Option<bool>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub oom_score_adj: Option<i16>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pid: Option<u32>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pids_limit: Option<u32>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub platform: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ports: Option<ports::Ports>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub privileged: Option<bool>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub profiles: Option<Vec<String>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pull_policy: Option<PullPolicy>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub read_only: Option<bool>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub restart: Option<Restart>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub runtime: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub scale: Option<u32>, // deprecated
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub secrets: Option<secrets::Secrets>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub secruity_opt: Option<Vec<String>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub shm_size: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stdin_open: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stop_grace_period: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stop_signal: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub storage_opt: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sysctls: Option<Labels>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tmpfs: Option<Tmpfs>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tty: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ulimits: Option<Ulimits>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub user: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub userns_mode: Option<String>,
-    pub volumes: Option<Vec<volumes::Volumes>>, // enum
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub volumes: Option<Vec<volumes::Volumes>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub volumes_from: Option<Vec<String>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub working_dir: Option<String>,
 }
 
@@ -149,8 +314,13 @@ pub enum Command {
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct CredentialSpec {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub file: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub registry: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub config: Option<String>, // must be valid config
 }
 
@@ -163,8 +333,13 @@ pub enum DependsOn {
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct DependsOnDetail {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub restart: Option<bool>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub condition: Option<DependsOnCondition>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub required: Option<bool>,
 }
 

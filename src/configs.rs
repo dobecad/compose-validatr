@@ -5,8 +5,13 @@ use crate::{compose::Validate, errors::ValidationErrors};
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Config {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub file: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub external: Option<bool>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 

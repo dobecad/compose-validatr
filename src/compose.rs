@@ -15,11 +15,21 @@ use serde_yaml;
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Compose {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
+
     pub services: HashMap<String, services::Service>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub networks: Option<HashMap<String, Option<networks::Network>>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub volumes: Option<HashMap<String, Option<volumes::Volume>>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub configs: Option<HashMap<String, Option<configs::Config>>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub secrets: Option<HashMap<String, Option<secrets::Secret>>>,
 }
 
@@ -117,7 +127,7 @@ impl Compose {
 
 /// This trait needs to be implemented for top level elements
 pub(crate) trait Validate {
-    /// Validate an attribute is valid within the context of the compose yaml
+    /// Validate that an attribute is valid within the context of the compose yaml
     ///
     /// Push all validation errors to the ValidationErrors so that users are able to see
     /// all of their errors at once, versus incrementally

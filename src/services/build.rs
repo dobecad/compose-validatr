@@ -18,24 +18,61 @@ pub enum Build {
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct BuildDetails {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub context: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub dockerfile: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub dockerfile_inline: Option<String>, // dockerfile must NOT be defined
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub args: Option<BuildArgs>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ssh: Option<SshArgs>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cache_from: Option<Vec<String>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cache_to: Option<Vec<String>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub additional_contexts: Option<AdditionalContexts>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub extra_hosts: Option<Vec<String>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub isolation: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub privileged: Option<bool>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub labels: Option<Labels>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub no_cache: Option<bool>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pull: Option<bool>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub shm_size: Option<ShmSize>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub target: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub secrets: Option<Vec<BuildSecret>>, // must be defined secrets
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tags: Option<Vec<String>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub platforms: Option<Vec<String>>,
 }
 
