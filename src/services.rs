@@ -1,3 +1,5 @@
+//! Service fields and validation
+
 mod blkio_config;
 mod build;
 mod deploy;
@@ -16,6 +18,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{compose::Validate, errors::ValidationErrors};
 
+/// Represents the top level [Service](https://docs.docker.com/compose/compose-file/05-services/) element
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Service {
     #[serde(skip_serializing_if = "Option::is_none")]

@@ -1,3 +1,5 @@
+//! Network fields and validation
+
 use crate::compose::Compose;
 use ipnetwork::IpNetwork;
 use serde::{Deserialize, Serialize};
@@ -9,6 +11,7 @@ use crate::{
     services::Labels,
 };
 
+/// Represents the top level [Network](https://docs.docker.com/compose/compose-file/06-networks/) element
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Network {
     #[serde(skip_serializing_if = "Option::is_none")]

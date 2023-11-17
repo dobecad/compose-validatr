@@ -1,3 +1,5 @@
+//! Compose fields and validation
+
 use std::{collections::HashMap, fmt::Display};
 
 use crate::{
@@ -17,8 +19,6 @@ use serde_yaml;
 ///
 /// All fields other than the `services` field are optional. Optional fields are skipped
 /// from serialization if they are `None`
-///
-///
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Compose {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -40,7 +40,7 @@ pub struct Compose {
 }
 
 impl Compose {
-    /// Create a new [`Compose`]
+    /// Create a new [`Compose`] representation
     pub fn new(contents: &str) -> Result<Self, ValidationErrors> {
         let mut errors = ValidationErrors::new();
         let compose: Result<Self, ValidationError> = serde_yaml::from_str(contents)

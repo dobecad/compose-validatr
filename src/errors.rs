@@ -1,3 +1,5 @@
+//! Library errors
+
 #[derive(Debug)]
 pub enum ValidationError {
     MissingField(String),

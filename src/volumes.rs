@@ -1,3 +1,5 @@
+//! Volume fields and validation
+
 use serde::{Deserialize, Serialize};
 
 use crate::compose::Compose;
@@ -5,6 +7,7 @@ use crate::compose::Validate;
 use crate::errors::ValidationErrors;
 use crate::services::Labels;
 
+/// Represents the top level [Volume](https://docs.docker.com/compose/compose-file/07-volumes/) element
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Volume {
     #[serde(skip_serializing_if = "Option::is_none")]
