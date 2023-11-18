@@ -1,3 +1,5 @@
+//! Volume fields and validation
+
 use serde::{Deserialize, Serialize};
 
 use crate::compose::Compose;
@@ -5,20 +7,34 @@ use crate::compose::Validate;
 use crate::errors::ValidationErrors;
 use crate::services::Labels;
 
+/// Represents the top level [Volume](https://docs.docker.com/compose/compose-file/07-volumes/) element
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Volume {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub driver: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub driver_opts: Option<DriverOpts>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub external: Option<bool>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub labels: Option<Labels>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct DriverOpts {
-    #[serde(rename = "type")]
+    #[serde(rename = "type", skip_serializing_if = "Option::is_none")]
     pub driver_type: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub o: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub device: Option<String>,
 }
 

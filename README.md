@@ -19,13 +19,13 @@ This library performs all validation except host device and local files validati
 let yaml = r#"
 services:
   gitlab:
-  image: gitlab/gitlab-ce:latest
-  container_name: gitlab
-  hostname: gitlab
-  restart: always
-  build:
-    context: .
-    dockerfile: webapp.Dockerfile
+    image: gitlab/gitlab-ce:latest
+    container_name: gitlab
+    hostname: gitlab
+    restart: always
+    build:
+      context: .
+      dockerfile: webapp.Dockerfile
 "#;
 
 let compose = Compose::new(yaml).unwrap();

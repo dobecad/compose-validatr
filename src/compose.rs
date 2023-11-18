@@ -1,3 +1,5 @@
+//! Compose fields and validation
+
 use std::{collections::HashMap, fmt::Display};
 
 use crate::{
@@ -13,17 +15,32 @@ use super::{configs, networks, secrets, services, volumes};
 use serde::{Deserialize, Serialize};
 use serde_yaml;
 
+/// Represents an entire [Docker Compose](https://docs.docker.com/compose/compose-file/) manifest
+///
+/// All fields other than the `services` field are optional. Optional fields are skipped
+/// from serialization if they are `None`
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Compose {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
+
     pub services: HashMap<String, services::Service>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub networks: Option<HashMap<String, Option<networks::Network>>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub volumes: Option<HashMap<String, Option<volumes::Volume>>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub configs: Option<HashMap<String, Option<configs::Config>>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub secrets: Option<HashMap<String, Option<secrets::Secret>>>,
 }
 
 impl Compose {
+    /// Create and validate a [`Compose`] representation
     pub fn new(contents: &str) -> Result<Self, ValidationErrors> {
         let mut errors = ValidationErrors::new();
         let compose: Result<Self, ValidationError> = serde_yaml::from_str(contents)
@@ -56,6 +73,7 @@ impl Compose {
         }
     }
 
+    /// Validate top level networks
     fn validate_networks(
         compose: &Compose,
         networks: &HashMap<String, Option<Network>>,
@@ -68,6 +86,7 @@ impl Compose {
         }
     }
 
+    /// Validate top level volumes
     fn validate_volumes(
         compose: &Compose,
         volumes: &HashMap<String, Option<Volume>>,
@@ -80,6 +99,7 @@ impl Compose {
         }
     }
 
+    /// Validate top level configs
     fn validate_configs(
         compose: &Compose,
         configs: &HashMap<String, Option<Config>>,
@@ -92,6 +112,7 @@ impl Compose {
         }
     }
 
+    /// Validate top level secrets
     fn validate_secrets(
         compose: &Compose,
         secrets: &HashMap<String, Option<Secret>>,
@@ -104,6 +125,7 @@ impl Compose {
         }
     }
 
+    /// Validate services
     fn validate_services(
         compose: &Compose,
         services: &HashMap<String, Service>,
@@ -117,7 +139,7 @@ impl Compose {
 
 /// This trait needs to be implemented for top level elements
 pub(crate) trait Validate {
-    /// Validate an attribute is valid within the context of the compose yaml
+    /// Validate that an attribute is valid within the context of the compose manifest
     ///
     /// Push all validation errors to the ValidationErrors so that users are able to see
     /// all of their errors at once, versus incrementally

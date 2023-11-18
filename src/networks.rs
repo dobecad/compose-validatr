@@ -1,3 +1,5 @@
+//! Network fields and validation
+
 use crate::compose::Compose;
 use ipnetwork::IpNetwork;
 use serde::{Deserialize, Serialize};
@@ -9,25 +11,52 @@ use crate::{
     services::Labels,
 };
 
+/// Represents the top level [Network](https://docs.docker.com/compose/compose-file/06-networks/) element
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Network {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub attachable: Option<bool>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ipam: Option<Ipam>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub driver: Option<Driver>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub driver_opts: Option<HashMap<String, String>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub enable_ipv6: Option<bool>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub external: Option<bool>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub config: Option<Vec<Config>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub internal: Option<bool>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub labels: Option<Labels>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub options: Option<HashMap<String, String>>,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Ipam {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub driver: Option<Driver>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub config: Option<Config>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub options: Option<HashMap<String, String>>,
 }
 
@@ -42,9 +71,16 @@ pub enum Driver {
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Config {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub subnet: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ip_range: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub gateway: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub aux_addresses: Option<HashMap<String, String>>,
 }
 
